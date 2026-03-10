@@ -5,13 +5,13 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { 
-    Users, 
-    TrendingUp, 
-    Copy, 
-    Check, 
-    Share2, 
-    ShieldCheck, 
+import {
+    Users,
+    TrendingUp,
+    Copy,
+    Check,
+    Share2,
+    ShieldCheck,
     ChevronLeft,
     Gift,
     Zap
@@ -44,7 +44,7 @@ export default function InvitePage() {
                 .select('amount')
                 .eq('user_id', profile.id)
                 .eq('type', 'commission')
-                .eq('description', 'Team commission (20%)');
+                .ilike('description', '%Referral%');
 
             const totalCommission = commissions?.reduce((sum, tx) => sum + Number(tx.amount), 0) || 0;
 
@@ -57,7 +57,7 @@ export default function InvitePage() {
         fetchReferralStats();
     }, [profile]);
 
-    const referralLink = typeof window !== 'undefined' 
+    const referralLink = typeof window !== 'undefined'
         ? `${window.location.origin}/register?ref=${profile?.referral_code}`
         : '';
 
@@ -85,7 +85,7 @@ export default function InvitePage() {
 
     return (
         <div className="max-w-4xl mx-auto pb-24 animate-fade-in space-y-8">
-            
+
             {/* Header */}
             <div className="flex items-center gap-4">
                 <Link href="/home" className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-text-secondary hover:text-text-primary transition-all">
@@ -103,7 +103,7 @@ export default function InvitePage() {
                 <div className="relative glass-card-strong p-8 md:p-10 space-y-10 overflow-hidden">
                     {/* Background decoration */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -mr-32 -mt-32" />
-                    
+
                     <div className="flex items-center gap-3 relative z-10">
                         <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                             <Users size={20} className="text-primary-light" />
@@ -124,21 +124,21 @@ export default function InvitePage() {
 
                     <div className="space-y-4 relative z-10">
                         <div className="relative">
-                            <input 
-                                type="text" 
-                                readOnly 
+                            <input
+                                type="text"
+                                readOnly
                                 value={referralLink}
                                 className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl px-5 py-4 text-xs font-bold text-text-secondary pr-16 focus:outline-none"
                             />
-                            <button 
+                            <button
                                 onClick={handleCopyLink}
                                 className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-xl bg-surface/50 dark:bg-black/50 hover:bg-white/10 transition-all text-primary"
                             >
                                 {copied ? <Check size={18} /> : <Copy size={18} />}
                             </button>
                         </div>
-                        
-                        <button 
+
+                        <button
                             onClick={handleShare}
                             className="w-full py-4 bg-gradient-to-r from-primary to-accent text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                         >
@@ -152,21 +152,21 @@ export default function InvitePage() {
             {/* How it works grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                    { 
-                        icon: Gift, 
-                        title: '01. Share', 
+                    {
+                        icon: Gift,
+                        title: '01. Share',
                         desc: 'Send your unique referral link to potential contributors.',
                         color: 'text-primary'
                     },
-                    { 
-                        icon: Zap, 
-                        title: '02. Activate', 
+                    {
+                        icon: Zap,
+                        title: '02. Activate',
                         desc: 'They join and begin optimizing asset batches in the network.',
                         color: 'text-accent'
                     },
-                    { 
-                        icon: ShieldCheck, 
-                        title: '03. Yield', 
+                    {
+                        icon: ShieldCheck,
+                        title: '03. Yield',
                         desc: 'Earn a perpetual 20% yield from their successful optimization tasks.',
                         color: 'text-success'
                     }

@@ -1,5 +1,5 @@
--- Task Operations Functions
--- This handles task completion securely on the server side
+-- Migration: Referral Bonus on Every Task (20%)
+-- This reverts the "after all sets" logic and awards 20% of task commission immediately for every task completed by an invitee.
 
 CREATE OR REPLACE FUNCTION public.complete_user_task(p_task_item_id INT)
 RETURNS json AS $$
@@ -55,7 +55,6 @@ BEGIN
     END IF;
 
     -- MINIMUM BALANCE CHECK ($65)
-    -- This ensures users have enough to "buy" the simulated product
     IF v_wallet_balance < 65 THEN
         RAISE EXCEPTION 'Minimum amount required to start task is $65';
     END IF;
