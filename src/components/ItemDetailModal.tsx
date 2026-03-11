@@ -52,7 +52,7 @@ export default function ItemDetailModal({
 
     return createPortal(
         <div
-            className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all duration-300"
+            className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all duration-300 md:pl-72"
             onClick={onClose}
         >
             <div

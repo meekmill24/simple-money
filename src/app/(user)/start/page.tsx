@@ -50,15 +50,10 @@ export default function StartPage() {
     const [showBundleSuccessToast, setShowBundleSuccessToast] = useState(false);
     const [hasPendingTask, setHasPendingTask] = useState(false);
 
-    // Lock body scroll when modal is open
+    // Simplified scroll management
     useEffect(() => {
-        if (modalOpen || bundleModal || showCompletionModal || showMinBalanceModal || showPendingWarning) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
         return () => { document.body.style.overflow = 'unset'; };
-    }, [modalOpen, bundleModal, showCompletionModal, showMinBalanceModal, showPendingWarning]);
+    }, []);
 
     // Dynamic Progress Logic
     const [tasksPerSet, setTasksPerSet] = useState(40);
@@ -718,7 +713,7 @@ export default function StartPage() {
             )}
 
             {showCompletionModal && (
-                <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-surface dark:bg-background/95 dark:backdrop-blur-2xl animate-fade-in text-center">
+                <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-surface dark:bg-background/95 dark:backdrop-blur-2xl animate-fade-in text-center md:pl-72">
                     <div className="glass-card max-w-sm w-full p-10 animate-scale-in border-success/30 rounded-[40px] relative">
                         <button
                             onClick={handleConfirmSettlement}
@@ -753,7 +748,7 @@ export default function StartPage() {
                 </div>
             )}
 
-            <div className="fixed top-[62%] inset-x-0 z-[1000] flex justify-center pointer-events-none px-4">
+            <div className="fixed top-[62%] inset-x-0 z-[1000] flex justify-center pointer-events-none px-4 md:pl-72">
                 <div className="w-full max-w-sm flex flex-col gap-3">
                     {/* Bundle success toast */}
                     {showBundleSuccessToast && (
@@ -792,7 +787,7 @@ export default function StartPage() {
                 </div>
             </div>
             {showPendingWarning && (
-                <div className="fixed inset-0 z-[600] flex items-center justify-center p-4 bg-surface dark:bg-background/98 dark:backdrop-blur-2xl animate-fade-in">
+                <div className="fixed inset-0 z-[600] flex items-center justify-center p-4 bg-surface dark:bg-background/98 dark:backdrop-blur-2xl animate-fade-in md:pl-72">
                     <div className="glass-card max-w-sm w-full p-8 text-center animate-shake border-danger/40">
                         <div className="w-20 h-20 rounded-3xl bg-danger/20 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_var(--color-danger)]">
                             <AlertTriangle size={40} className="text-danger" />

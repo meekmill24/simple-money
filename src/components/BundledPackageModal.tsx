@@ -41,7 +41,7 @@ export default function BundledPackageModal({
     if (!isOpen || !bundle || !mounted) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl transition-all duration-300">
+        <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl transition-all duration-300 md:pl-72">
             <div
                 className="bg-surface dark:bg-[#0f0a15] w-full max-w-sm max-h-[85vh] rounded-[40px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,1)] border border-amber-500/20 animate-fade-in relative flex flex-col"
                 onClick={(e) => e.stopPropagation()}
@@ -103,7 +103,7 @@ export default function BundledPackageModal({
                         START SEQUENCE <ShieldCheck size={20} />
                     </button>
 
-                    <p className="text-[9px] text-text-secondary font-bold opacity-30 uppercase tracking-[0.2em] text-center px-6 leading-relaxed">
+                    <p className="text-[9px] text-center text-text-secondary font-bold opacity-30 uppercase tracking-[0.2em] mt-4 px-6 leading-relaxed">
                         Funds will remain in the secure clearance node until the full sequence is finalized.
                     </p>
                 </div>
