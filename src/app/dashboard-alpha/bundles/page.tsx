@@ -63,7 +63,7 @@ export default function AdminBundlesPage() {
     const [assigning, setAssigning] = useState(false);
     const [assignMsg, setAssignMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
-    
+
     const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
     const [selectedTaskIds, setSelectedTaskIds] = useState<number[]>([]);
     const [bonusPreset, setBonusPreset] = useState('pct_30');
@@ -82,15 +82,15 @@ export default function AdminBundlesPage() {
         });
     };
 
-    const filteredUsers = useMemo(() => users.filter(u => 
+    const filteredUsers = useMemo(() => users.filter(u =>
         (userLevelFilter === 'all' || u.level_id === userLevelFilter) &&
         u.username.toLowerCase().includes(userSearchQuery.toLowerCase())
     ), [users, userLevelFilter, userSearchQuery]);
 
-    const filteredTaskItems = useMemo(() => taskItems.filter(t => 
+    const filteredTaskItems = useMemo(() => taskItems.filter(t =>
         (productLevelFilter === 'all' || t.level_id === productLevelFilter) &&
         (t.title.toLowerCase().includes(productSearchQuery.toLowerCase()) ||
-         t.category.toLowerCase().includes(productSearchQuery.toLowerCase()))
+            t.category.toLowerCase().includes(productSearchQuery.toLowerCase()))
     ), [taskItems, productLevelFilter, productSearchQuery]);
 
     const fetchBundles = useCallback(async () => {
@@ -283,6 +283,91 @@ export default function AdminBundlesPage() {
                 </div>
             </div>
 
+            {/* Active Allocations Section */}
+            <div className="glass-card overflow-hidden border-primary/20">
+                <div className="p-6 border-b border-white/5 flex items-center justify-between bg-primary/5">
+                    <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Users size={14} className="text-primary-light" /> Active User Allocations
+                    </h3>
+                    <div className="text-[10px] font-black text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-widest">
+                        {users.filter(u => u.pending_bundle).length} Pending Hits
+                    </div>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="bg-black/20 text-[9px] font-black text-text-secondary uppercase tracking-widest">
+                                <th className="p-4 text-left">User</th>
+                                <th className="p-4 text-left">Target Task</th>
+                                <th className="p-4 text-left">Bundle Price</th>
+                                <th className="p-4 text-left">Commission</th>
+                                <th className="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                            {users.filter(u => u.pending_bundle).map(u => {
+                                const b = u.pending_bundle as any;
+                                return (
+                                    <tr key={u.id} className="hover:bg-white/5 transition-colors group">
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary-light font-black text-xs uppercase shrink-0">
+                                                    {u.username[0]}
+                                                </div>
+                                                <span className="font-bold text-white truncate">{u.username}</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-amber-500 font-black text-xs uppercase tracking-tighter">TASK #{b.targetIndex}</span>
+                                                <span className="text-[9px] text-text-secondary font-bold uppercase tracking-widest opacity-60">Wait until hit</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4"><p className="text-white font-bold tracking-tight">${Number(b.totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></td>
+                                        <td className="p-4"><p className="text-success font-black tracking-tight">+${Number(b.bonusAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></td>
+                                        <td className="p-4">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedUserId(u.id);
+                                                        setAssignForm({
+                                                            name: b.name || 'Special Bundle Package',
+                                                            description: b.description || '',
+                                                            productAmount: b.totalAmount,
+                                                            targetIndex: b.targetIndex
+                                                        });
+                                                        if (b.taskItemIds) setSelectedTaskIds(b.taskItemIds);
+                                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                    }}
+                                                    className="p-2 rounded-lg bg-white/5 text-text-secondary hover:text-white border border-white/10 hover:border-white/20 transition-all"
+                                                    title="Edit Figures"
+                                                >
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleClearBundle(u.id)}
+                                                    className="p-2 rounded-lg bg-danger/10 text-danger hover:bg-danger/20 border border-danger/20 transition-all"
+                                                    title="Cancel Allocation"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            {users.filter(u => u.pending_bundle).length === 0 && (
+                                <tr>
+                                    <td colSpan={5} className="p-12 text-center opacity-30 italic text-text-secondary uppercase font-black text-[10px] tracking-widest">
+                                        No active bundles in queue
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 {/* Assignment Form */}
                 <div className="xl:col-span-4 space-y-6">
@@ -297,8 +382,8 @@ export default function AdminBundlesPage() {
                             <div>
                                 <label className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] mb-2 block">Target User</label>
                                 <div className="relative">
-                                    <button 
-                                        onClick={() => setShowUserDropdown(!showUserDropdown)} 
+                                    <button
+                                        onClick={() => setShowUserDropdown(!showUserDropdown)}
                                         className={`w-full input-field text-left flex justify-between items-center group transition-all ${showUserDropdown ? 'ring-2 ring-primary/30 border-primary/50 bg-black/20' : ''}`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -317,22 +402,22 @@ export default function AdminBundlesPage() {
                                         <div className="absolute z-[100] top-full mt-2 w-full glass-card border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden max-h-64 flex flex-col animate-in slide-in-from-top-2 fade-in duration-200 ring-1 ring-white/10">
                                             <div className="p-3 border-b border-white/10 bg-[#0a0a0a] sticky top-0 z-10">
                                                 <div className="relative">
-                                                    <input 
-                                                        type="text" 
-                                                        placeholder="Filter by username..." 
-                                                        className="w-full bg-white/5 border border-white/20 rounded-lg pl-8 pr-3 py-2 text-xs text-white focus:outline-none focus:border-primary transition-all font-medium placeholder:text-text-secondary/30" 
-                                                        value={userSearchQuery} 
-                                                        onChange={e => setUserSearchQuery(e.target.value)} 
-                                                        autoFocus 
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Filter by username..."
+                                                        className="w-full bg-white/5 border border-white/20 rounded-lg pl-8 pr-3 py-2 text-xs text-white focus:outline-none focus:border-primary transition-all font-medium placeholder:text-text-secondary/30"
+                                                        value={userSearchQuery}
+                                                        onChange={e => setUserSearchQuery(e.target.value)}
+                                                        autoFocus
                                                     />
                                                     <Users size={12} className="absolute left-2.5 top-2.5 text-text-secondary" />
                                                 </div>
                                             </div>
                                             <div className="overflow-y-auto px-1 py-1 custom-scrollbar flex-1 bg-[#121212]">
                                                 {filteredUsers.map((u: UserProfile) => (
-                                                    <div 
-                                                        key={u.id} 
-                                                        onClick={() => { handleUserSelect(u.id); setShowUserDropdown(false); }} 
+                                                    <div
+                                                        key={u.id}
+                                                        onClick={() => { handleUserSelect(u.id); setShowUserDropdown(false); }}
                                                         className={`p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-all flex justify-between items-center mb-1 group border ${selectedUserId === u.id ? 'bg-primary border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]' : 'border-transparent'}`}
                                                     >
                                                         <div className="min-w-0 pr-2">
@@ -396,13 +481,13 @@ export default function AdminBundlesPage() {
                                         </span>
                                     )}
                                 </label>
-                                
+
                                 <div className="glass-card border-white/5 bg-black/20 overflow-hidden flex flex-col min-h-[180px] max-h-[220px]">
                                     <div className="p-2 border-b border-white/5 bg-white/2 space-y-2">
                                         <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
                                             {['all', 1, 2, 3, 4, 5].map(lvl => (
-                                                <button 
-                                                    key={lvl} 
+                                                <button
+                                                    key={lvl}
                                                     onClick={() => setProductLevelFilter(lvl as any)}
                                                     className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter border transition-all shrink-0 ${productLevelFilter === lvl ? 'bg-primary border-primary text-white' : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'}`}
                                                 >
@@ -411,12 +496,12 @@ export default function AdminBundlesPage() {
                                             ))}
                                         </div>
                                         <div className="relative">
-                                            <input 
-                                                type="text" 
-                                                placeholder="Search catalog products..." 
-                                                className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-[10px] text-white focus:outline-none focus:border-primary/50 transition-all font-medium" 
-                                                value={productSearchQuery} 
-                                                onChange={e => setProductSearchQuery(e.target.value)} 
+                                            <input
+                                                type="text"
+                                                placeholder="Search catalog products..."
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-[10px] text-white focus:outline-none focus:border-primary/50 transition-all font-medium"
+                                                value={productSearchQuery}
+                                                onChange={e => setProductSearchQuery(e.target.value)}
                                             />
                                             <ImageIcon size={12} className="absolute left-2.5 top-2 text-text-secondary/50" />
                                         </div>
@@ -425,9 +510,9 @@ export default function AdminBundlesPage() {
                                         {filteredTaskItems.map((t: TaskItem) => {
                                             const isSelected = selectedTaskIds.includes(t.id);
                                             return (
-                                                <div 
-                                                    key={t.id} 
-                                                    onClick={() => toggleTaskSelect(t.id)} 
+                                                <div
+                                                    key={t.id}
+                                                    onClick={() => toggleTaskSelect(t.id)}
                                                     className={`p-2 rounded-xl cursor-pointer hover:bg-white/5 transition-all flex items-center gap-3 mb-1 group border ${isSelected ? 'bg-primary/20 border-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]' : 'border-transparent'}`}
                                                 >
                                                     <div className="relative shrink-0">
@@ -482,12 +567,12 @@ export default function AdminBundlesPage() {
                                             </button>
                                         )}
                                     </label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         placeholder="0.00"
-                                        className="input-field text-white font-bold placeholder:text-white/10" 
-                                        value={assignForm.productAmount} 
-                                        onChange={e => setAssignForm({ ...assignForm, productAmount: e.target.value })} 
+                                        className="input-field text-white font-bold placeholder:text-white/10"
+                                        value={assignForm.productAmount}
+                                        onChange={e => setAssignForm({ ...assignForm, productAmount: e.target.value })}
                                     />
                                 </div>
                                 <div>
@@ -506,12 +591,12 @@ export default function AdminBundlesPage() {
                                             <label className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">Fixed Profit ($)</label>
                                             {customBonus !== '' && <button onClick={() => setCustomBonus('')} className="text-[8px] font-black text-text-secondary hover:text-danger uppercase tracking-widest transition-colors"><X size={8} /></button>}
                                         </div>
-                                        <input 
-                                            type="number" 
-                                            placeholder="Enter fixed profit…" 
-                                            className="input-field text-sm font-bold placeholder:text-white/10" 
-                                            value={customBonus} 
-                                            onChange={e => setCustomBonus(e.target.value)} 
+                                        <input
+                                            type="number"
+                                            placeholder="Enter fixed profit…"
+                                            className="input-field text-sm font-bold placeholder:text-white/10"
+                                            value={customBonus}
+                                            onChange={e => setCustomBonus(e.target.value)}
                                         />
                                     </div>
                                 )}
@@ -521,16 +606,16 @@ export default function AdminBundlesPage() {
                             <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 space-y-3">
                                 <label className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] block">Target Task Index (1-40)</label>
                                 <div className="flex items-center gap-4">
-                                    <input 
-                                        type="range" 
-                                        min="1" 
-                                        max="100" 
-                                        className="flex-1 accent-amber-500" 
-                                        value={assignForm.targetIndex} 
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max="100"
+                                        className="flex-1 accent-amber-500"
+                                        value={assignForm.targetIndex}
                                         onChange={e => setAssignForm({ ...assignForm, targetIndex: parseInt(e.target.value) })}
                                     />
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         className="w-16 bg-white/5 border border-amber-500/30 rounded-lg py-1 text-center font-black text-amber-500 text-xs"
                                         value={assignForm.targetIndex}
                                         onChange={e => setAssignForm({ ...assignForm, targetIndex: parseInt(e.target.value) || 1 })}
@@ -557,9 +642,9 @@ export default function AdminBundlesPage() {
                                 </div>
                             )}
 
-                            <button 
-                                onClick={handleAssignBundle} 
-                                disabled={!selectedUserId || assigning || (typeof assignForm.productAmount === 'string' ? assignForm.productAmount === '' : assignForm.productAmount <= 0)} 
+                            <button
+                                onClick={handleAssignBundle}
+                                disabled={!selectedUserId || assigning || (typeof assignForm.productAmount === 'string' ? assignForm.productAmount === '' : assignForm.productAmount <= 0)}
                                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black uppercase tracking-[0.15em] text-xs flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-40 shadow-xl shadow-amber-500/20 active:scale-95 transition-all"
                             >
                                 {assigning ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
