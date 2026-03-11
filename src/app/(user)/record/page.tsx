@@ -154,12 +154,12 @@ export default function RecordPage() {
             </div>
 
             <div className="glass-card overflow-hidden">
-                <div className="grid grid-cols-4 md:grid-cols-5 px-6 py-2.5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/5 text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">
-                    <span>{t('timestamp')}</span>
-                    <span className="hidden md:block">{t('task_type')}</span>
-                    <span>Product Value</span>
-                    <span>{t('amount_earned')}</span>
-                    <span className="text-right">{t('status')}</span>
+                <div className="grid grid-cols-4 md:grid-cols-5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/5 text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">
+                    <span className="px-4 py-3 border-r border-black/5 dark:border-white/5">{t('timestamp')}</span>
+                    <span className="hidden md:block px-4 py-3 border-r border-black/5 dark:border-white/5">{t('task_type')}</span>
+                    <span className="px-4 py-3 border-r border-black/5 dark:border-white/5">Details & Value</span>
+                    <span className="px-4 py-3 border-r border-black/5 dark:border-white/5">Profit</span>
+                    <span className="px-4 py-3 text-right">{t('status')}</span>
                 </div>
 
                 <div className="divide-y divide-black/5 dark:divide-white/5">
@@ -173,10 +173,10 @@ export default function RecordPage() {
                             <p className="text-sm font-bold text-text-secondary uppercase tracking-widest">{t('no_records_found')}</p>
                         </div>
                     ) : (
-                        filteredTasks.map((task) => (
-                            <div key={task.id} className="grid grid-cols-4 md:grid-cols-5 px-6 py-4 items-center hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
-                                <div className="text-[11px] font-medium text-text-secondary">
-                                    <p className="text-text-primary font-bold">
+                        filteredTasks.map((task, idx) => (
+                            <div key={task.id} className={`grid grid-cols-4 md:grid-cols-5 items-stretch hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-colors group ${idx % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.01] dark:bg-white/[0.01]'}`}>
+                                <div className="px-4 py-5 border-r border-black/5 dark:border-white/5 flex flex-col justify-center">
+                                    <p className="text-[11px] text-text-primary font-bold">
                                         {new Date(task.created_at).toLocaleDateString(
                                             language === 'English' ? 'en-US' :
                                                 language === 'Spanish' ? 'es-ES' :
@@ -199,8 +199,8 @@ export default function RecordPage() {
                                         )}
                                     </p>
                                 </div>
-                                <div className="hidden md:flex flex-col">
-                                    <span className="text-[11px] font-bold text-text-primary uppercase tracking-tight truncate max-w-[120px]">
+                                <div className="hidden md:flex flex-col px-4 py-5 border-r border-black/5 dark:border-white/5 justify-center">
+                                    <span className="text-[11px] font-bold text-text-primary uppercase tracking-tight truncate">
                                         {task.task_item?.title || `${t('task')} #${task.task_item_id}`}
                                     </span>
                                     {task.is_bundle && (
@@ -209,23 +209,25 @@ export default function RecordPage() {
                                         </span>
                                     )}
                                 </div>
-                                <div className="text-[11px] font-bold text-text-secondary flex flex-col items-start gap-1">
+                                <div className="px-4 py-5 border-r border-black/5 dark:border-white/5 flex flex-col justify-center gap-2">
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Value</span>
-                                        <span className="text-text-primary">{format(task.cost_amount || 0)}</span>
+                                        <span className="text-[9px] opacity-40 uppercase tracking-tighter font-black">Value</span>
+                                        <span className="text-[11px] font-bold text-text-primary">{format(task.cost_amount || 0)}</span>
                                     </div>
                                     {task.is_bundle && task.status === 'pending' && (
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] opacity-40 uppercase tracking-tighter">Requirement</span>
-                                            <span className="text-danger-light">-{format(Math.abs(profile?.wallet_balance || 0))}</span>
+                                        <div className="flex flex-col border-t border-black/5 dark:border-white/5 pt-1.5">
+                                            <span className="text-[9px] opacity-40 uppercase tracking-tighter font-black">Require</span>
+                                            <span className="text-[11px] font-black text-danger-light">-{format(Math.abs(profile?.wallet_balance || 0))}</span>
                                         </div>
                                     )}
                                 </div>
-                                <div className="text-sm font-black text-success flex flex-col items-start">
-                                    <span className="text-[10px] opacity-40 uppercase tracking-tighter text-text-secondary font-bold">Profit</span>
-                                    {task.status === 'pending' ? (task.earned_amount > 0 ? `+${format(task.earned_amount)}` : format(0)) : `+${format(task.earned_amount)}`}
+                                <div className="px-4 py-5 border-r border-black/5 dark:border-white/5 flex flex-col justify-center">
+                                    <span className="text-[9px] opacity-40 uppercase tracking-tighter text-text-secondary font-black">Profit Applied</span>
+                                    <span className="text-sm font-black text-success">
+                                        {task.status === 'pending' ? (task.earned_amount > 0 ? `+${format(task.earned_amount)}` : format(0)) : `+${format(task.earned_amount)}`}
+                                    </span>
                                 </div>
-                                <div className="text-right flex flex-col items-end gap-2">
+                                <div className="px-4 py-5 flex flex-col items-end justify-center gap-2">
                                     {statusBadge(task.status)}
                                     {task.status === 'pending' && (
                                         profile && profile.wallet_balance < 0 ? (
