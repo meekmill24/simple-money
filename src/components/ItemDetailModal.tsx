@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, CheckCircle, Package } from 'lucide-react';
-import { useCurrency } from '@/context/CurrencyContext';
+import { X, CheckCircle, Package, Loader2 } from 'lucide-react';
 
 interface ItemDetailModalProps {
     isOpen: boolean;
@@ -14,11 +13,10 @@ interface ItemDetailModalProps {
         category: string;
     } | null;
     onSubmit: (item: any, displayValue: number) => Promise<void>;
-    progressData?: {
-        current: number;
-        total: number;
-    };
-    walletBalance?: number;
+    balance: number;
+    commissionRate: number;
+    format: (val: number) => string;
+    isSubmitting: boolean;
 }
 
 export default function ItemDetailModal({
@@ -26,16 +24,18 @@ export default function ItemDetailModal({
     onClose,
     item,
     onSubmit,
-    walletBalance
+    balance,
+    commissionRate,
+    format,
+    isSubmitting
 }: ItemDetailModalProps) {
-    const { format } = useCurrency();
-
     if (!isOpen || !item) return null;
 
-    // Fixed product value logic to match database expectations
-    const displayProductValue = walletBalance !== undefined ? Math.floor(walletBalance * 0.8) : 0;
+    // Use the logic expected by the backend/page.tsx
+    const displayProductValue = Math.floor(balance * 0.8);
 
     const handleSubmit = async () => {
+        if (isSubmitting) return;
         try {
             await onSubmit(item, displayProductValue);
         } catch (err) {
@@ -51,7 +51,8 @@ export default function ItemDetailModal({
             >
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 text-text-secondary hover:text-text-primary z-10"
+                    className="absolute top-4 right-4 p-2 text-text-secondary hover:text-text-primary z-10 transition-colors"
+                    disabled={isSubmitting}
                 >
                     <X size={20} />
                 </button>
@@ -70,7 +71,7 @@ export default function ItemDetailModal({
                             Product optimization
                         </span>
                         <h3 className="text-xl font-black text-text-primary mb-2 line-clamp-1">{item.title}</h3>
-                        <p className="text-xs text-text-secondary mb-6 line-clamp-2 px-2">{item.description}</p>
+                        <p className="text-xs text-text-secondary mb-6 line-clamp-2 px-2 opacity-70">{item.description}</p>
 
                         <div className="w-full space-y-3 mb-8">
                             <div className="flex justify-between items-center p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10">
@@ -79,15 +80,24 @@ export default function ItemDetailModal({
                             </div>
                             <div className="flex justify-between items-center p-4 rounded-2xl bg-success/10 border border-success/20">
                                 <span className="text-[10px] font-black text-success uppercase tracking-widest">Est. Profit</span>
-                                <span className="text-lg font-black text-success">+{format(displayProductValue * 0.005)}</span>
+                                <span className="text-lg font-black text-success">+{format(displayProductValue * commissionRate)}</span>
                             </div>
                         </div>
 
                         <button
                             onClick={handleSubmit}
-                            className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                            disabled={isSubmitting}
+                            className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
                         >
-                            Submit Order <CheckCircle size={18} />
+                            {isSubmitting ? (
+                                <>
+                                    <Loader2 className="animate-spin" size={18} /> Processing...
+                                </>
+                            ) : (
+                                <>
+                                    Submit Order <CheckCircle size={18} />
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>

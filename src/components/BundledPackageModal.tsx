@@ -5,25 +5,30 @@ import { X, CheckCircle, Zap, TrendingUp, ShieldCheck } from 'lucide-react';
 import { useCurrency } from '@/context/CurrencyContext';
 
 export interface BundlePackage {
-    title: string;
-    image_url: string;
+    id: string;
+    name: string;
     description: string;
-    cost_amount: number;
-    earned_amount: number;
+    shortageAmount: number;
+    totalAmount: number;
+    bonusAmount: number;
+    expiresIn: number;
+    taskItem: {
+        title: string;
+        image_url: string;
+        category: string;
+    };
 }
 
 interface BundledPackageModalProps {
     isOpen: boolean;
-    onClose: () => void;
     bundle: BundlePackage | null;
-    onSubmit: (bundle: any) => Promise<void>;
+    onAccept: (bundle: BundlePackage) => Promise<void>;
 }
 
 export default function BundledPackageModal({
     isOpen,
-    onClose,
     bundle,
-    onSubmit
+    onAccept
 }: BundledPackageModalProps) {
     const { format } = useCurrency();
 
@@ -46,9 +51,9 @@ export default function BundledPackageModal({
                         <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em] mb-2 block">
                             Premium Bundle Sequence
                         </span>
-                        <h3 className="text-2xl font-black text-text-primary mb-2">Surprise Reward!</h3>
+                        <h3 className="text-2xl font-black text-text-primary mb-2">{bundle.name || 'Surprise Reward!'}</h3>
                         <p className="text-xs text-text-secondary leading-relaxed opacity-70">
-                            You've unlocked a high-valuation combination task. This sequence offers significantly higher commissions than standard optimizations.
+                            {bundle.description || "You've unlocked a high-valuation combination task. This sequence offers significantly higher commissions than standard optimizations."}
                         </p>
                     </div>
 
@@ -58,9 +63,9 @@ export default function BundledPackageModal({
                                 <div className="p-2 rounded-xl bg-primary/20 text-primary">
                                     <TrendingUp size={16} />
                                 </div>
-                                <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-left">Bundle Cost</span>
+                                <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest text-left">Bundle Value</span>
                             </div>
-                            <span className="text-lg font-black text-text-primary">{format(bundle.cost_amount)}</span>
+                            <span className="text-lg font-black text-text-primary">{format(bundle.totalAmount)}</span>
                         </div>
 
                         <div className="p-5 rounded-3xl bg-success/10 border border-success/20 flex items-center justify-between">
@@ -68,21 +73,21 @@ export default function BundledPackageModal({
                                 <div className="p-2 rounded-xl bg-success/20 text-success">
                                     <CheckCircle size={16} />
                                 </div>
-                                <span className="text-[10px] font-black text-success uppercase tracking-widest text-left">Guaranteed Profit</span>
+                                <span className="text-[10px] font-black text-success uppercase tracking-widest text-left">Commission Reward</span>
                             </div>
-                            <span className="text-lg font-black text-success">+{format(bundle.earned_amount)}</span>
+                            <span className="text-lg font-black text-success">+{format(bundle.bonusAmount)}</span>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-3 w-full">
                         <button
-                            onClick={() => onSubmit(bundle)}
+                            onClick={() => onAccept(bundle)}
                             className="w-full py-5 rounded-[24px] bg-gradient-to-r from-amber-500 to-amber-600 text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-xl shadow-amber-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
                             Process Bundle Now <ShieldCheck size={18} />
                         </button>
 
-                        <p className="text-[10px] text-text-secondary font-bold opacity-40 uppercase tracking-tighter">
+                        <p className="text-[10px] text-text-secondary font-bold opacity-40 uppercase tracking-tighter text-center">
                             Funds will be locked until sequence settlement
                         </p>
                     </div>
