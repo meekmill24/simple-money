@@ -33,103 +33,111 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
 
             {/* Modal Container */}
             <div
-                className="relative w-full max-w-[420px] glass-card-glow overflow-hidden animate-scale-in border border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.2)]"
+                className="relative w-full max-w-[360px] h-auto max-h-[95vh] glass-card-glow overflow-y-auto animate-scale-in border border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.2)] rounded-[32px] z-10 flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Premium Background Effects */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/20 blur-[80px] rounded-full pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-600/20 blur-[60px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 blur-[60px] rounded-full pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-600/20 blur-[40px] rounded-full pointer-events-none" />
 
-                {/* Bundle Header */}
-                <div className="p-6 pb-0 flex items-center justify-between relative z-10">
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-amber-500 animate-ping shadow-[0_0_10px_var(--color-amber-500)]" />
-                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.4em]">Special Acceleration</span>
-                    </div>
-                    <div className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center gap-2">
-                        <Sparkles size={12} className="text-amber-500" />
-                        <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">VIP Bundle</span>
-                    </div>
-                </div>
-
-                {/* Bundle Information */}
-                <div className="p-8 pb-4 flex flex-col items-center relative z-10 text-center">
-                    {bundle.taskItem?.image_url ? (
-                        <div className="w-48 h-48 rounded-[40px] bg-white/5 border border-amber-500/20 p-4 shadow-2xl relative group mb-6">
-                            <div className="absolute inset-x-0 -bottom-4 h-8 bg-amber-500/40 blur-2xl rounded-full" />
-                            <img
-                                src={bundle.taskItem.image_url}
-                                alt={bundle.taskItem.title}
-                                className="w-full h-full object-cover rounded-[24px] relative z-10 shadow-lg border border-white/10"
-                            />
-                            <div className="absolute -top-2 -right-2 bg-gradient-to-br from-amber-400 to-orange-600 p-2.5 rounded-xl shadow-[0_0_20px_var(--color-amber-500)] z-20 animate-bounce">
-                                <Star size={20} className="text-white fill-white" />
-                            </div>
+                <div className="p-8 flex-1 flex flex-col">
+                    {/* Bundle Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping shadow-[0_0_10px_var(--color-amber-500)]" />
+                            <span className="text-[9px] font-black text-amber-500 uppercase tracking-[0.2em]">Special Acceleration</span>
                         </div>
-                    ) : (
-                        <div className="w-24 h-24 rounded-3xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
-                            <Package size={40} className="text-amber-500" />
-                        </div>
-                    )}
-
-                    <h2 className="text-2xl font-black text-white uppercase tracking-tight leading-tight px-4">
-                        {bundle.taskItem?.title || bundle.name}
-                    </h2>
-                    <p className="text-text-secondary text-xs mt-3 leading-relaxed max-w-[280px] uppercase font-bold tracking-wider opacity-80">
-                        {bundle.description}
-                    </p>
-                </div>
-
-                {/* Financial Table */}
-                <div className="px-8 mb-8 relative z-10">
-                    <div className="glass-card p-5 border border-amber-500/10 bg-amber-500/[0.03] space-y-4">
-                        <div className="flex justify-between items-end border-b border-white/5 pb-3">
-                            <div className="flex flex-col">
-                                <span className="text-[9px] font-black text-text-secondary uppercase tracking-widest mb-1">Asset Combination</span>
-                                <span className="text-xl font-black text-white">${bundle.totalAmount.toFixed(2)}</span>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <span className="text-[9px] font-black text-success uppercase tracking-widest mb-1">Bonus Profit</span>
-                                <span className="text-xl font-black text-success shadow-success/20">+${bundle.bonusAmount.toFixed(2)}</span>
-                            </div>
-                        </div>
-                        
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <Zap size={14} className="text-amber-500 fill-amber-500" />
-                                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Deposit Required</span>
-                            </div>
-                            <span className="text-lg font-black text-white bg-amber-500/20 px-3 py-1 rounded-lg border border-amber-500/30">
-                                ${bundle.shortageAmount.toFixed(2)} USDT
-                            </span>
+                        <div className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center gap-1.5">
+                            <Sparkles size={10} className="text-amber-500" />
+                            <span className="text-[9px] font-black text-amber-400 uppercase tracking-widest">VIP</span>
                         </div>
                     </div>
-                </div>
 
-                {/* Mandatory Checkbox/Info */}
-                <div className="px-8 space-y-3 mb-8 relative z-10">
-                    <div className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    {/* Product Row - COMPACT HORIZONTAL (Matching ItemDetailModal) */}
+                    <div className="flex items-center gap-5 mb-8 text-left">
+                        {bundle.taskItem?.image_url ? (
+                            <div className="w-20 h-20 rounded-2xl bg-white/5 border border-amber-500/20 p-1.5 shrink-0 relative group overflow-hidden">
+                                <img
+                                    src={bundle.taskItem.image_url}
+                                    alt={bundle.taskItem.title}
+                                    className="w-full h-full object-cover rounded-xl transition-transform group-hover:scale-110"
+                                />
+                                <div className="absolute -top-1 -right-1 bg-gradient-to-br from-amber-400 to-orange-600 p-1 rounded-lg shadow-lg z-20">
+                                    <Star size={10} className="text-white fill-white" />
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="w-20 h-20 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+                                <Package size={24} className="text-amber-500" />
+                            </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-sm font-black text-white uppercase tracking-tight line-clamp-2 leading-tight">
+                                {bundle.taskItem?.title || bundle.name}
+                            </h2>
+                            <p className="text-[9px] text-text-secondary mt-2 leading-tight uppercase font-bold tracking-wider opacity-60">
+                                {bundle.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Financial Summary - COMPACT GLASS CARD */}
+                    <div className="p-5 mb-8 rounded-2xl border border-amber-500/10 bg-amber-500/[0.04] backdrop-blur-md space-y-5 relative overflow-hidden group">
+                        <div className="absolute -right-4 -top-4 w-16 h-16 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-all" />
+
+                        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] px-1">
+                            <span className="w-1/3 text-left text-white/40">Asset Logic</span>
+                            <span className="w-1/3 text-center text-white/40">Required</span>
+                            <span className="w-1/3 text-right text-white/40">Bonus Profit</span>
+                        </div>
+                        <div className="flex justify-between items-end px-1">
+                            <div className="w-1/3 flex flex-col items-start gap-1">
+                                <span className="text-sm font-black text-white truncate">${bundle.totalAmount.toFixed(2)}</span>
+                                <div className="flex items-center gap-1 opacity-40">
+                                    <div className="w-2.5 h-2.5 bg-amber-500/20 rounded-full flex items-center justify-center">
+                                        <Zap size={6} className="text-amber-500 fill-amber-500" />
+                                    </div>
+                                    <span className="text-[7px] font-bold uppercase tracking-tighter text-white">USDT</span>
+                                </div>
+                            </div>
+                            <div className="w-1/3 flex flex-col items-center">
+                                <span className="text-sm font-black text-amber-500">${bundle.shortageAmount.toFixed(2)}</span>
+                                <span className="text-[7px] font-bold text-amber-400 uppercase tracking-tighter mt-1">Deposit</span>
+                            </div>
+                            <div className="w-1/3 flex flex-col items-end gap-1 text-success">
+                                <div className="flex items-center gap-1">
+                                    <Zap size={14} className="fill-success opacity-80" />
+                                    <span className="text-sm font-black">+${bundle.bonusAmount.toFixed(2)}</span>
+                                </div>
+                                <div className="flex items-center gap-1 opacity-40">
+                                    <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/color/usdt.png" className="w-2.5 h-2.5" alt="" />
+                                    <span className="text-[7px] font-bold uppercase tracking-tighter text-white">USDT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Requirement Alert */}
+                    <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl mb-8">
                         <ShieldCheck size={16} className="text-red-500 shrink-0 mt-0.5" />
-                        <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest leading-relaxed">
-                            MANDATORY REQUIREMENT: These matched assets are reserved. You must accept this bundle to unlock your remaining daily tasks.
+                        <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest leading-relaxed text-left">
+                            MANDATORY: These assets are reserved. You must accept this bundle to unlock remaining daily tasks.
                         </p>
                     </div>
-                </div>
 
-                {/* Action Button */}
-                <div className="px-8 pb-10 relative z-10">
+                    {/* Action Button */}
                     <button
                         onClick={() => onAccept(bundle)}
-                        className="w-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group"
+                        className="w-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 text-white py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group"
                     >
-                        Accept & Continue <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        Accept & Continue <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
                     </button>
-                    <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-black text-amber-500/60 uppercase tracking-[0.2em]">
+
+                    <div className="mt-6 flex items-center justify-center gap-2 opacity-30 pb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                        Secured Bundle Active
+                        <span className="text-[8px] font-black text-amber-500 uppercase tracking-[0.3em]">Secured Bundle Active</span>
                     </div>
                 </div>
-
             </div>
         </div>
     );
