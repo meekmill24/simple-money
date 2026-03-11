@@ -8,6 +8,7 @@ import { Search, Copy, CheckCircle, XCircle, Users, TrendingUp } from 'lucide-re
 interface ReferralWithOwner extends Omit<ReferralCode, 'owner'> {
     owner: { username: string; phone: string } | null;
     referred_users: { username: string; wallet_balance: number; profit: number; created_at: string }[];
+    total_commission: number;
 }
 
 export default function AdminReferralsPage() {
@@ -19,16 +20,23 @@ export default function AdminReferralsPage() {
     const [allUsers, setAllUsers] = useState<Profile[]>([]);
 
     const fetchReferrals = async () => {
-        const [refRes, usersRes] = await Promise.all([
+        const [refRes, usersRes, transRes] = await Promise.all([
             supabase.from('referral_codes').select('*, owner:profiles(username, phone)').order('created_at', { ascending: false }),
             supabase.from('profiles').select('id, username, wallet_balance, profit, referred_by, created_at'),
+            supabase.from('transactions').select('*').eq('type', 'commission').ilike('description', '%Referral%')
         ]);
 
         const users = (usersRes.data || []) as Profile[];
         setAllUsers(users);
 
+        const transactions = (transRes.data || []);
+
         const enriched: ReferralWithOwner[] = (refRes.data || []).map((ref) => {
             const referred = users.filter(u => u.referred_by === ref.owner_id);
+            const ownerCommissions = transactions
+                .filter(t => t.user_id === ref.owner_id)
+                .reduce((sum, t) => sum + (t.amount || 0), 0);
+
             return {
                 ...ref,
                 owner: ref.owner as { username: string; phone: string } | null,
@@ -38,6 +46,7 @@ export default function AdminReferralsPage() {
                     profit: u.profit,
                     created_at: u.created_at,
                 })),
+                total_commission: ownerCommissions,
             };
         });
 
@@ -65,17 +74,19 @@ export default function AdminReferralsPage() {
 
     // Summary stats
     const totalReferrals = allUsers.filter(u => u.referred_by).length;
+    const totalCommissions = referrals.reduce((sum, r) => sum + r.total_commission, 0);
     const totalCodes = referrals.length;
     const activeCodes = referrals.filter(r => r.is_active).length;
 
     return (
         <div className="space-y-6">
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
                 {[
                     { label: 'Total Referral Codes', value: totalCodes, icon: <Copy size={18} /> },
                     { label: 'Active Codes', value: activeCodes, icon: <CheckCircle size={18} /> },
                     { label: 'Users Referred', value: totalReferrals, icon: <Users size={18} /> },
+                    { label: 'Total Paid Bonuses', value: `$${totalCommissions.toFixed(2)}`, icon: <TrendingUp size={18} /> },
                 ].map(s => (
                     <div key={s.label} className="glass-card p-4 flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary-light shrink-0">{s.icon}</div>
@@ -103,6 +114,7 @@ export default function AdminReferralsPage() {
                                 <th className="text-left p-4 text-text-secondary font-medium">Owner</th>
                                 <th className="text-left p-4 text-text-secondary font-medium">Uses</th>
                                 <th className="text-left p-4 text-text-secondary font-medium">Referred Users</th>
+                                <th className="text-left p-4 text-text-secondary font-medium">Earned Bonus</th>
                                 <th className="text-left p-4 text-text-secondary font-medium">Status</th>
                                 <th className="text-left p-4 text-text-secondary font-medium">Created</th>
                                 <th className="text-right p-4 text-text-secondary font-medium">Actions</th>
@@ -115,7 +127,7 @@ export default function AdminReferralsPage() {
                                 <tr><td colSpan={7} className="p-8 text-center text-text-secondary">No referral codes found</td></tr>
                             ) : (
                                 filtered.map((ref) => (
-                                        <React.Fragment key={ref.id}>
+                                    <React.Fragment key={ref.id}>
                                         <tr className="border-b border-text-primary/10 hover:bg-white/5 transition-colors">
                                             <td className="p-4">
                                                 <div className="flex items-center gap-2">
@@ -141,6 +153,11 @@ export default function AdminReferralsPage() {
                                                 )}
                                             </td>
                                             <td className="p-4">
+                                                <span className="text-sm font-black text-success">
+                                                    ${ref.total_commission.toFixed(2)}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
                                                 <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${ref.is_active ? 'bg-success/20 text-success' : 'bg-danger/20 text-danger'}`}>
                                                     {ref.is_active ? <CheckCircle size={12} /> : <XCircle size={12} />}
                                                     {ref.is_active ? 'Active' : 'Inactive'}
@@ -163,7 +180,7 @@ export default function AdminReferralsPage() {
                                                 <td className="p-3 text-xs text-text-secondary" colSpan={2}>Joined: {new Date(u.created_at).toLocaleDateString()}</td>
                                             </tr>
                                         ))}
-                                        </React.Fragment>
+                                    </React.Fragment>
                                 ))
                             )}
                         </tbody>
