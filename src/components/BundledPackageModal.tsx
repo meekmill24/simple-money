@@ -55,13 +55,13 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
     if (!isOpen || !bundle) return null;
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-start justify-center p-4 pt-20 md:pt-24 animate-fade-in md:pl-72 overflow-hidden">
+        <div className="fixed inset-0 z-[300] flex items-start justify-center p-4 animate-fade-in md:pl-72 overflow-hidden">
             {/* Backdrop with extreme blur and amber tint */}
             <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl" />
 
             {/* Modal Container */}
             <div
-                className="relative w-full max-w-[360px] glass-card-glow animate-bounce-in border border-amber-500/30 shadow-[0_0_80px_rgba(245,158,11,0.4)] rounded-[40px] z-10 flex flex-col"
+                className="relative w-full max-w-[360px] glass-card-glow animate-bounce-in border border-amber-500/30 shadow-[0_0_80px_rgba(245,158,11,0.4)] rounded-[40px] z-10 flex flex-col mt-[58%] md:mt-[15%]"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Premium Background Effects */}
