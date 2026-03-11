@@ -64,13 +64,13 @@ export default function ItemDetailModal({
     };
 
     return (
-        <div className="fixed inset-0 z-[1000] flex animate-fade-in items-start justify-center p-4 pt-[20%] md:pt-[10%] md:pl-80">
-            Sarah            {/* Backdrop with heavy blur */}
+        <div className="fixed inset-0 z-[1000] flex animate-fade-in items-center justify-center p-4">
+            {/* Backdrop with heavy blur */}
             <div className="absolute inset-0 bg-white/80 dark:bg-black/90 backdrop-blur-sm dark:backdrop-blur-xl" />
 
             {/* Modal Container */}
             <div
-                className="relative w-full max-w-[360px] h-auto max-h-[80vh] glass-card-strong overflow-y-auto border border-black/5 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-[32px] z-[1001] flex flex-col"
+                className="relative w-full max-w-[360px] max-h-[90vh] glass-card-strong overflow-y-auto border border-black/5 dark:border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.6)] rounded-[32px] z-[1001] flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Background Decoration */}
