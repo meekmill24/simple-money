@@ -209,13 +209,20 @@ export default function RecordPage() {
                                         </span>
                                     )}
                                 </div>
-                                <div className="text-[11px] font-bold text-text-secondary flex flex-col">
-                                    <span className={task.is_bundle ? "text-danger-light" : ""}>{format(task.cost_amount || 0)}</span>
+                                <div className="text-[11px] font-bold text-text-secondary flex flex-col items-start gap-1">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] opacity-40 uppercase tracking-tighter">Value</span>
+                                        <span className="text-text-primary">{format(task.cost_amount || 0)}</span>
+                                    </div>
                                     {task.is_bundle && task.status === 'pending' && (
-                                        <span className="text-[8px] font-black uppercase text-danger/60 tracking-tighter">Negative Flow</span>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] opacity-40 uppercase tracking-tighter">Requirement</span>
+                                            <span className="text-danger-light">-{format(Math.abs(profile?.wallet_balance || 0))}</span>
+                                        </div>
                                     )}
                                 </div>
-                                <div className="text-sm font-black text-success">
+                                <div className="text-sm font-black text-success flex flex-col items-start">
+                                    <span className="text-[10px] opacity-40 uppercase tracking-tighter text-text-secondary font-bold">Profit</span>
                                     {task.status === 'pending' ? (task.earned_amount > 0 ? `+${format(task.earned_amount)}` : format(0)) : `+${format(task.earned_amount)}`}
                                 </div>
                                 <div className="text-right flex flex-col items-end gap-2">
