@@ -362,8 +362,7 @@ export default function StartPage() {
 
         try {
             const { data, error } = await supabase.rpc('complete_user_task', {
-                p_task_item_id: item.id,
-                p_cost_amount: costAmount
+                p_task_item_id: item.id
             });
 
             if (error) {
@@ -381,14 +380,14 @@ export default function StartPage() {
             if (isBundleResult) {
                 setShowBundleSuccessToast(true);
                 setTimeout(() => setShowBundleSuccessToast(false), 6000);
-            } else if (tasksInCurrentSet + 1 >= tasksPerSet) {
-                setModalOpen(false);
-                setModalSeen(false);
-                setTimeout(() => setShowCompletionModal(true), 200);
             } else {
                 setModalOpen(false);
-                setProfitAdded(earnedAmount);
-                setTimeout(() => setProfitAdded(null), 3000);
+                setProfitAdded(earnedAmount > 0 ? earnedAmount : 0);
+                setTimeout(() => setProfitAdded(null), 4000);
+                if (tasksInCurrentSet + 1 >= tasksPerSet) {
+                    setModalSeen(false);
+                    setTimeout(() => setShowCompletionModal(true), 1500);
+                }
             }
 
             // 2. Sync with database
@@ -680,16 +679,16 @@ export default function StartPage() {
             <BundledPackageModal isOpen={bundleModal} bundle={activeBundle} onAccept={handleBundleAccept} />
 
 
-            {/* Huge Profit Toast */}
+            {/* Huge Profit Toast (Moved up to match normal profit toast) */}
             {showBundleSuccessToast && (
-                <div className="fixed top-[58%] left-1/2 -translate-x-1/2 z-[1000] animate-bounce-in w-[90%] md:w-auto">
-                    <div className="bg-gradient-to-br from-primary to-accent text-white px-8 py-6 rounded-3xl shadow-[0_20px_50px_rgba(157,80,187,0.5)] flex items-center gap-6 border border-white/30">
+                <div className="fixed top-24 inset-x-0 z-[1000] flex justify-center pointer-events-none md:pl-80 px-4">
+                    <div className="w-full max-w-sm bg-gradient-to-br from-primary via-primary-light to-accent text-white px-8 py-6 rounded-[28px] shadow-[0_20px_50px_rgba(157,80,187,0.5)] flex items-center gap-5 border border-white/30 animate-slide-up pointer-events-auto">
                         <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
                             <Zap size={28} className="text-white animate-pulse" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Premium Order Success</span>
-                            <p className="text-sm md:text-md font-bold text-white max-w-[300px]">You have gotten Huge profit from the bundle you can now continue your daily task.</p>
+                            <p className="text-[11px] font-bold text-white leading-relaxed">Optimization Cycle complete! Profit added to your secure wallet balance.</p>
                         </div>
                     </div>
                 </div>
@@ -767,7 +766,7 @@ export default function StartPage() {
                 </div>
             )}
 
-            <div className="fixed top-24 inset-x-0 z-[1000] flex justify-center pointer-events-none md:pl-80 px-4">
+            <div className="fixed top-32 inset-x-0 z-[1000] flex justify-center pointer-events-none md:pl-80 px-4">
                 <div className="w-full max-w-sm flex flex-col gap-3">
                     {profitAdded !== null && (
                         <div className="bg-success text-white px-8 py-5 rounded-[28px] shadow-[0_20px_50px_rgba(34,197,94,0.4)] flex items-center justify-center gap-4 animate-slide-up border border-white/20">

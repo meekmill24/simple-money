@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
             role: editData.role,
             wallet_balance: (editData.wallet_balance as any) === '' ? 0 : Number(editData.wallet_balance),
             profit: (editData.profit as any) === '' ? 0 : Number(editData.profit),
-            frozen_amount: (editData.frozen_amount as any) === '' ? 0 : Number(editData.frozen_amount),
+            referral_earned: (editData.referral_earned as any) === '' ? 0 : Number(editData.referral_earned),
             level_id: editData.level_id,
             completed_count: editData.completed_count,
             current_set: editData.current_set || 1,
@@ -163,7 +163,7 @@ export default function AdminUsersPage() {
                     .from('profiles')
                     .update({ wallet_balance: (assignReferrerUser.wallet_balance || 0) + welcomeBonusAmount })
                     .eq('id', assignReferrerUser.id);
-                
+
                 await supabase.from('transactions').insert({
                     user_id: assignReferrerUser.id,
                     type: 'deposit',
@@ -194,7 +194,7 @@ export default function AdminUsersPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
                     <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-                         User <span className="text-primary italic">Portfolio</span>
+                        User <span className="text-primary italic">Portfolio</span>
                     </h1>
                     <p className="text-text-secondary text-xs font-medium uppercase tracking-[0.2em] opacity-40">Administrative User Directory</p>
                 </div>
@@ -228,7 +228,7 @@ export default function AdminUsersPage() {
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Role</th>
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Balance</th>
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Profit</th>
-                                <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Frozen</th>
+                                <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Bonus</th>
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">VIP Level</th>
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Progress</th>
                                 <th className="text-left p-4 text-text-secondary font-black uppercase tracking-widest text-[10px]">Affiliate</th>
@@ -266,34 +266,34 @@ export default function AdminUsersPage() {
                                                     </td>
                                                     <td className="p-3"><input type="number" step="0.01" className="input-field py-1.5 text-xs w-20 font-mono font-bold text-white" value={editData.wallet_balance || 0} onChange={(e) => setEditData({ ...editData, wallet_balance: parseFloat(e.target.value) || 0 })} /></td>
                                                     <td className="p-3"><input type="number" step="0.01" className="input-field py-1.5 text-xs w-20 font-mono font-bold text-success" value={editData.profit || 0} onChange={(e) => setEditData({ ...editData, profit: parseFloat(e.target.value) || 0 })} /></td>
-                                                    <td className="p-3"><input type="number" step="0.01" className="input-field py-1.5 text-xs w-20 font-mono font-bold text-accent-light" value={editData.frozen_amount || 0} onChange={(e) => setEditData({ ...editData, frozen_amount: parseFloat(e.target.value) || 0 })} /></td>
+                                                    <td className="p-3"><input type="number" step="0.01" className="input-field py-1.5 text-xs w-20 font-mono font-bold text-accent-light" value={editData.referral_earned || 0} onChange={(e) => setEditData({ ...editData, referral_earned: parseFloat(e.target.value) || 0 })} /></td>
                                                     <td className="p-3">
                                                         <select className="input-field py-1.5 text-xs font-black w-24 border-primary/30" value={editData.level_id || 1} onChange={(e) => setEditData({ ...editData, level_id: parseInt(e.target.value) })}>
                                                             {[1, 2, 3, 4, 5].map(lvl => <option key={lvl} value={lvl} className="bg-[#1a1a2e]">Level {lvl}</option>)}
                                                         </select>
                                                     </td>
-                                                     <td className="p-3">
-                                                         <div className="flex flex-col gap-1.5">
-                                                             <div className="flex gap-1">
-                                                                 <input type="number" className="input-field py-1 px-2 text-xs w-12 font-mono bg-white/10" 
-                                                                     value={editData.completed_count || 0} 
-                                                                     onChange={(e) => setEditData({ ...editData, completed_count: parseInt(e.target.value) || 0 })} 
-                                                                 />
-                                                                 <span className="text-[9px] text-text-secondary self-center font-black uppercase opacity-50">/ {(editData.current_set || 1) * ((editData.level_id || 1) * 5 + 35)}</span>
-                                                             </div>
-                                                             <div className="flex gap-0.5 mt-1.5 overflow-x-auto pb-1 max-w-[120px]">
+                                                    <td className="p-3">
+                                                        <div className="flex flex-col gap-1.5">
+                                                            <div className="flex gap-1">
+                                                                <input type="number" className="input-field py-1 px-2 text-xs w-12 font-mono bg-white/10"
+                                                                    value={editData.completed_count || 0}
+                                                                    onChange={(e) => setEditData({ ...editData, completed_count: parseInt(e.target.value) || 0 })}
+                                                                />
+                                                                <span className="text-[9px] text-text-secondary self-center font-black uppercase opacity-50">/ {(editData.current_set || 1) * ((editData.level_id || 1) * 5 + 35)}</span>
+                                                            </div>
+                                                            <div className="flex gap-0.5 mt-1.5 overflow-x-auto pb-1 max-w-[120px]">
                                                                 {(() => {
                                                                     const tps = (editData.level_id || 1) * 5 + 35;
                                                                     const spd = (editData.level_id || 1) + 2;
                                                                     return Array.from({ length: spd }).map((_, i) => (
-                                                                        <button 
+                                                                        <button
                                                                             key={i}
-                                                                            onClick={() => setEditData({ ...editData, completed_count: tps * i, current_set: i + 1 })} 
+                                                                            onClick={() => setEditData({ ...editData, completed_count: tps * i, current_set: i + 1 })}
                                                                             className={`text-[7px] px-1 py-0.5 rounded border uppercase font-bold transition-all whitespace-nowrap
-                                                                                ${i === 0 ? 'bg-white/5 text-white/50 border-white/5' : 
-                                                                                  i === 1 ? 'bg-primary/20 text-primary-light border-primary/20' :
-                                                                                  i === 2 ? 'bg-accent/20 text-accent-light border-accent/20' :
-                                                                                  'bg-success/20 text-success border-success/20'}
+                                                                                ${i === 0 ? 'bg-white/5 text-white/50 border-white/5' :
+                                                                                    i === 1 ? 'bg-primary/20 text-primary-light border-primary/20' :
+                                                                                        i === 2 ? 'bg-accent/20 text-accent-light border-accent/20' :
+                                                                                            'bg-success/20 text-success border-success/20'}
                                                                             `}
                                                                         >
                                                                             S{i + 1} ({tps * i}/{tps * (i + 1)})
@@ -301,7 +301,7 @@ export default function AdminUsersPage() {
                                                                     ));
                                                                 })()}
                                                             </div>
-                                                         </div>
+                                                        </div>
                                                     </td>
                                                     <td className="p-3">
                                                         <div className="flex flex-col gap-1">
@@ -331,7 +331,7 @@ export default function AdminUsersPage() {
                                                     </td>
                                                     <td className="p-4"><span className="font-mono font-bold text-white text-xs whitespace-nowrap">${user.wallet_balance?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></td>
                                                     <td className="p-4"><span className="font-mono font-bold text-success text-xs whitespace-nowrap">${user.profit?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></td>
-                                                    <td className="p-4"><span className="font-mono font-bold text-accent-light text-xs whitespace-nowrap">${user.frozen_amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></td>
+                                                    <td className="p-4"><span className="font-mono font-bold text-accent-light text-xs whitespace-nowrap">${user.referral_earned?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></td>
                                                     <td className="p-4">
                                                         <div className="flex items-center gap-2">
                                                             <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -340,22 +340,22 @@ export default function AdminUsersPage() {
                                                             <span className="text-[10px] font-bold text-text-secondary uppercase tracking-tighter">Level {user.level_id || 1}</span>
                                                         </div>
                                                     </td>
-                                                     <td className="p-4">
-                                                         <div className="flex flex-col min-w-[90px]">
-                                                             <div className="flex justify-between items-center mb-1">
-                                                                 <span className="text-[9px] font-black text-white/90 tracking-widest uppercase">Set {user.current_set || 1}</span>
-                                                                 <span className="text-[9px] text-text-secondary font-mono bg-white/5 px-1 rounded">
-                                                                     {user.completed_count || 0}/{(user.current_set || 1) * ((user.level_id || 1) * 5 + 35)}
-                                                                 </span>
-                                                             </div>
-                                                             <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                                                                 <div 
-                                                                     className="h-full bg-gradient-to-r from-primary to-accent shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all duration-700 ease-out" 
-                                                                     style={{ width: `${Math.min(100, ((user.completed_count || 0) / ((user.current_set || 1) * ((user.level_id || 1) * 5 + 35))) * 100)}%` }} 
-                                                                 />
-                                                             </div>
-                                                         </div>
-                                                     </td>
+                                                    <td className="p-4">
+                                                        <div className="flex flex-col min-w-[90px]">
+                                                            <div className="flex justify-between items-center mb-1">
+                                                                <span className="text-[9px] font-black text-white/90 tracking-widest uppercase">Set {user.current_set || 1}</span>
+                                                                <span className="text-[9px] text-text-secondary font-mono bg-white/5 px-1 rounded">
+                                                                    {user.completed_count || 0}/{(user.current_set || 1) * ((user.level_id || 1) * 5 + 35)}
+                                                                </span>
+                                                            </div>
+                                                            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                                                <div
+                                                                    className="h-full bg-gradient-to-r from-primary to-accent shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all duration-700 ease-out"
+                                                                    style={{ width: `${Math.min(100, ((user.completed_count || 0) / ((user.current_set || 1) * ((user.level_id || 1) * 5 + 35))) * 100)}%` }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                     <td className="p-4">
                                                         <div className="flex flex-col gap-1 min-w-[100px]">
                                                             <div className="flex items-center gap-1.5">

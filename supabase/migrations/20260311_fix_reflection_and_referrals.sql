@@ -1,8 +1,14 @@
--- Migration: Stabilize RPC Signature & Sync Value Logic
--- 1. DROP the old function first to avoid signature conflicts in the schema cache
+-- Migration: Full Referral & Record Logic Fix
+-- 1. Ensure the schema has necessary columns
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS referral_earned DECIMAL(12,2) DEFAULT 0;
+ALTER TABLE public.user_tasks ADD COLUMN IF NOT EXISTS cost_amount DECIMAL(12,2) DEFAULT 0;
+ALTER TABLE public.user_tasks ADD COLUMN IF NOT EXISTS is_bundle BOOLEAN DEFAULT false;
+
+-- 2. Clean up previous function signatures to avoid "Function Not Found" issues
 DROP FUNCTION IF EXISTS public.complete_user_task(INT);
 DROP FUNCTION IF EXISTS public.complete_user_task(INT, DECIMAL);
 
+-- 3. Update the main task completion function
 CREATE OR REPLACE FUNCTION public.complete_user_task(
     p_task_item_id INT, 
     p_cost_amount DECIMAL(12,2) DEFAULT NULL
@@ -41,7 +47,7 @@ BEGIN
         RAISE EXCEPTION 'Authentication required.';
     END IF;
 
-    -- Fetch profile data
+    -- Fetch profile data (including new referral_earned field)
     SELECT 
         COALESCE(p.level_id, 1), COALESCE(p.completed_count, 0), COALESCE(p.current_set, 1), 
         COALESCE(p.wallet_balance, 0.00), COALESCE(p.frozen_amount, 0.00), 
@@ -103,7 +109,7 @@ BEGIN
         END IF;
 
         -- SYNC: Use provided amount or generate internal
-        IF p_cost_amount IS NOT NULL AND p_cost_amount > 0 THEN
+        IF p_cost_amount IS NOT NULL AND p_cost_amount > 20 THEN
             v_cost_amount := p_cost_amount;
         ELSE
             v_random_price := (v_wallet_balance * (0.40 + random() * 0.45));
@@ -139,7 +145,7 @@ BEGIN
         RETURNING wallet_balance INTO v_new_wallet_balance;
     END IF;
 
-    -- LOG TASK RECORD
+    -- LOG TASK RECORD (Ensuring cost_amount is always saved)
     IF v_pending_task_id IS NOT NULL THEN
         UPDATE public.user_tasks 
         SET status = 'completed', completed_at = NOW(), earned_amount = v_earned_amount, cost_amount = v_cost_amount, is_bundle = v_is_bundle_task
@@ -158,14 +164,21 @@ BEGIN
         VALUES (v_user_id, 'unfreeze', v_cost_amount, 'Capital Return: ' || COALESCE(v_task_title, 'Bundle'), 'approved');
     END IF;
 
-    -- 20% INSTANT REFERRAL BONUS
+    -- 20% INSTANT REFERRAL BONUS (WITH ADMIN VISIBILITY SYNC)
     IF v_referrer_id IS NOT NULL AND v_earned_amount > 0 THEN
         v_ref_bonus := ROUND((v_earned_amount * 0.20), 2);
         
         IF v_ref_bonus > 0 THEN
-            UPDATE public.profiles SET wallet_balance = wallet_balance + v_ref_bonus WHERE id = v_referrer_id;
+            UPDATE public.profiles 
+            SET 
+                wallet_balance = wallet_balance + v_ref_bonus,
+                referral_earned = COALESCE(referral_earned, 0) + v_ref_bonus
+            WHERE id = v_referrer_id;
+
+            -- Description MUST contain "Referral" for Admin dashboards to count it correctly
             INSERT INTO public.transactions (user_id, type, amount, description, status)
-            VALUES (v_referrer_id, 'commission', v_ref_bonus, 'Neural Optimization Dividend (20%)', 'approved');
+            VALUES (v_referrer_id, 'commission', v_ref_bonus, 'Optimization Team Referral Bonus (20%)', 'approved');
+            
             INSERT INTO public.notifications (user_id, title, message, type)
             VALUES (v_referrer_id, 'Bonus Received! 🎉', 'Earned $' || v_ref_bonus || ' from teammate optimization.', 'success');
         END IF;
@@ -176,7 +189,8 @@ BEGIN
         'earned_amount', v_earned_amount,
         'new_balance', v_new_wallet_balance,
         'set_complete', (v_tasks_in_current_set + 1 >= v_tasks_per_set),
-        'is_bundle', v_is_bundle_task
+        'is_bundle', v_is_bundle_task,
+        'cost_amount', v_cost_amount
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
