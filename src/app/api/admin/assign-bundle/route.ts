@@ -14,7 +14,14 @@ export async function POST(req: NextRequest) {
         const { userId, bundle } = await req.json();
         const supabaseAdmin = getAdminClient();
 
-        // 1. Update the profile with bundle data
+        // 1. Clear any existing pending tasks to allow the "edit" or "re-deploy" to take effect immediately
+        await supabaseAdmin
+            .from('user_tasks')
+            .delete()
+            .eq('user_id', userId)
+            .eq('status', 'pending');
+
+        // 2. Update the profile with bundle data
         const { error: profileError } = await supabaseAdmin
             .from('profiles')
             .update({ pending_bundle: bundle })

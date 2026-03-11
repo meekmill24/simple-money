@@ -386,6 +386,10 @@ export default function AdminBundlesPage() {
                                                             productAmount: b.totalAmount,
                                                             targetIndex: b.targetIndex
                                                         });
+                                                        setBonusPreset('custom');
+                                                        setCustomBonus(b.bonusAmount);
+                                                        setAssignMsg(null);
+                                                        setProductLevelFilter(u.level_id || 'all');
                                                         if (b.taskItemIds) setSelectedTaskIds(b.taskItemIds);
                                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                                     }}
