@@ -55,7 +55,7 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
     if (!isOpen || !bundle) return null;
 
     return (
-        <div className="fixed inset-0 z-[1000] flex items-start justify-center pt-48 md:pt-64 animate-fade-in overflow-y-auto">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-fade-in md:pl-80">
             {/* Backdrop with extreme blur and amber tint */}
             <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl" />
 
