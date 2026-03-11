@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const getAdminClient = () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) throw new Error('Missing Supabase Service Key or URL');
+    if (!url) throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL');
+    if (!key) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
     return createClient(url, key);
 };
 
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
     try {
         const { userId, bundle } = await req.json();
         const supabaseAdmin = getAdminClient();
-        
+
         // 1. Update the profile with bundle data
         const { error: profileError } = await supabaseAdmin
             .from('profiles')
@@ -49,7 +50,7 @@ export async function DELETE(req: NextRequest) {
         if (!userId) return NextResponse.json({ error: 'userId required' }, { status: 400 });
 
         const supabaseAdmin = getAdminClient();
-        
+
         // Clear bundle and remove any pending tasks for this user
         await supabaseAdmin
             .from('profiles')

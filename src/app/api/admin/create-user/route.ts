@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const getAdminClient = () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) throw new Error('Missing Supabase Service Key or URL');
+    if (!url) throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL');
+    if (!key) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
     return createClient(url, key);
 };
 
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
 
             if (refData) {
                 referred_by_id = refData.owner_id;
-                
+
                 // Increment owner's referral count
                 await supabaseAdmin.from('referral_codes')
                     .update({ uses_count: (refData.uses_count || 0) + 1 })
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
         // Step 5: Add welcome bonus transaction if balance > 0
         if ((wallet_balance || 0) > 0) {
             const isWelcomeBonus = wallet_balance === 45 || wallet_balance === 25;
-            
+
             await supabaseAdmin.from('transactions').insert({
                 user_id: userId,
                 type: 'deposit',
