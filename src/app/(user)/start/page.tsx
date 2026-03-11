@@ -423,9 +423,9 @@ export default function StartPage() {
             });
             setPendingTaskItem(null);
         }
-        await refreshProfile();
         setBundleModal(false);
         router.push('/record');
+        await refreshProfile();
     };
 
     return (

@@ -51,6 +51,8 @@ export interface UserTask {
     task_item_id: number;
     status: 'pending' | 'completed' | 'cancelled';
     earned_amount: number;
+    cost_amount?: number;
+    is_bundle?: boolean;
     completed_at: string | null;
     created_at: string;
     task_item?: TaskItem;

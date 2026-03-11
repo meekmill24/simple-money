@@ -46,10 +46,10 @@ export default function RecordPage() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         setSubmittingTaskId(taskItemId);
-        
+
         try {
-            const { data, error } = await supabase.rpc('complete_user_task', { 
-                p_task_item_id: taskItemId 
+            const { data, error } = await supabase.rpc('complete_user_task', {
+                p_task_item_id: taskItemId
             });
 
             if (error) throw error;
@@ -76,8 +76,8 @@ export default function RecordPage() {
     };
 
     const filteredTasks = tasks.filter(t => {
-        const matchesSearch = t.task_item?.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             t.id.toString().includes(searchQuery);
+        const matchesSearch = t.task_item?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.id.toString().includes(searchQuery);
         const matchesFilter = filter === 'all' || t.status === filter;
         return matchesSearch && matchesFilter;
     });
@@ -85,19 +85,19 @@ export default function RecordPage() {
     const statusBadge = (status: string) => {
         const statusLabel = t(status.toLowerCase());
         switch (status) {
-            case 'completed': 
+            case 'completed':
                 return (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase bg-success/10 text-success border border-success/20 tracking-wider">
                         <CheckCircle size={10} /> {statusLabel}
                     </span>
                 );
-            case 'pending': 
+            case 'pending':
                 return (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase bg-warning/10 text-warning border border-warning/20 tracking-wider">
                         <Clock size={10} /> {statusLabel}
                     </span>
                 );
-            case 'cancelled': 
+            case 'cancelled':
                 return (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase bg-danger/10 text-danger border border-danger/20 tracking-wider">
                         <XCircle size={10} /> {statusLabel}
@@ -118,22 +118,22 @@ export default function RecordPage() {
                     <h2 className="text-2xl font-black text-text-primary uppercase tracking-tight">Activity records</h2>
                     <p className="text-text-secondary text-xs mt-1 font-bold uppercase tracking-widest">{filteredTasks.length} total records found</p>
                 </div>
-                
-                    <div className="flex items-center gap-3">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
-                            <input 
-                                type="text" 
-                                placeholder={t('search_tasks')}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl py-2.5 pl-9 pr-4 text-xs text-text-primary focus:outline-none focus:border-primary/50 w-[200px]"
-                            />
-                        </div>
-                        <button className="p-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
-                            <Filter size={18} />
-                        </button>
+
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
+                        <input
+                            type="text"
+                            placeholder={t('search_tasks')}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl py-2.5 pl-9 pr-4 text-xs text-text-primary focus:outline-none focus:border-primary/50 w-[200px]"
+                        />
                     </div>
+                    <button className="p-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
+                        <Filter size={18} />
+                    </button>
+                </div>
             </div>
 
             <div className="flex border-b border-black/5 dark:border-white/5 relative">
@@ -141,9 +141,8 @@ export default function RecordPage() {
                     <button
                         key={f}
                         onClick={() => setFilter(f)}
-                        className={`px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all relative z-10 ${
-                            filter === f ? 'text-primary-light' : 'text-text-secondary hover:text-text-primary'
-                        }`}
+                        className={`px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all relative z-10 ${filter === f ? 'text-primary-light' : 'text-text-secondary hover:text-text-primary'
+                            }`}
                     >
                         {t(f)}
                         {filter === f && (
@@ -154,9 +153,10 @@ export default function RecordPage() {
             </div>
 
             <div className="glass-card overflow-hidden">
-                <div className="grid grid-cols-4 px-6 py-2.5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/5 text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">
+                <div className="grid grid-cols-4 md:grid-cols-5 px-6 py-2.5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/5 text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">
                     <span>{t('timestamp')}</span>
-                    <span>{t('task_type')}</span>
+                    <span className="hidden md:block">{t('task_type')}</span>
+                    <span>Product Value</span>
                     <span>{t('amount_earned')}</span>
                     <span className="text-right">{t('status')}</span>
                 </div>
@@ -173,33 +173,46 @@ export default function RecordPage() {
                         </div>
                     ) : (
                         filteredTasks.map((task) => (
-                            <div key={task.id} className="grid grid-cols-4 px-6 py-2.5 items-center hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
+                            <div key={task.id} className="grid grid-cols-4 md:grid-cols-5 px-6 py-4 items-center hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
                                 <div className="text-[11px] font-medium text-text-secondary">
                                     <p className="text-text-primary font-bold">
                                         {new Date(task.created_at).toLocaleDateString(
                                             language === 'English' ? 'en-US' :
-                                            language === 'Spanish' ? 'es-ES' :
-                                            language === 'French' ? 'fr-FR' :
-                                            language === 'German' ? 'de-DE' :
-                                            language === 'Chinese' ? 'zh-CN' :
-                                            language === 'Japanese' ? 'ja-JP' : 'en-US',
+                                                language === 'Spanish' ? 'es-ES' :
+                                                    language === 'French' ? 'fr-FR' :
+                                                        language === 'German' ? 'de-DE' :
+                                                            language === 'Chinese' ? 'zh-CN' :
+                                                                language === 'Japanese' ? 'ja-JP' : 'en-US',
                                             { month: 'short', day: 'numeric', year: 'numeric' }
                                         )}
                                     </p>
                                     <p className="text-[10px] opacity-60 tracking-tight">
                                         {new Date(task.created_at).toLocaleTimeString(
                                             language === 'English' ? 'en-US' :
-                                            language === 'Spanish' ? 'es-ES' :
-                                            language === 'French' ? 'fr-FR' :
-                                            language === 'German' ? 'de-DE' :
-                                            language === 'Chinese' ? 'zh-CN' :
-                                            language === 'Japanese' ? 'ja-JP' : 'en-US',
+                                                language === 'Spanish' ? 'es-ES' :
+                                                    language === 'French' ? 'fr-FR' :
+                                                        language === 'German' ? 'de-DE' :
+                                                            language === 'Chinese' ? 'zh-CN' :
+                                                                language === 'Japanese' ? 'ja-JP' : 'en-US',
                                             { hour: '2-digit', minute: '2-digit' }
                                         )}
                                     </p>
                                 </div>
-                                <div className="text-[11px] font-bold text-text-primary uppercase tracking-tight">
-                                    {task.task_item?.title || `${t('task')} #${task.task_item_id}`}
+                                <div className="hidden md:flex flex-col">
+                                    <span className="text-[11px] font-bold text-text-primary uppercase tracking-tight truncate max-w-[120px]">
+                                        {task.task_item?.title || `${t('task')} #${task.task_item_id}`}
+                                    </span>
+                                    {task.is_bundle && (
+                                        <span className="text-[8px] font-black text-amber-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                                            <Zap size={8} fill="currentColor" /> Lucky Bundle
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="text-[11px] font-bold text-text-secondary flex flex-col">
+                                    <span className={task.is_bundle ? "text-danger-light" : ""}>{format(task.cost_amount || 0)}</span>
+                                    {task.is_bundle && task.status === 'pending' && (
+                                        <span className="text-[8px] font-black uppercase text-danger/60 tracking-tighter">Negative Flow</span>
+                                    )}
                                 </div>
                                 <div className="text-sm font-black text-success">
                                     {task.status === 'pending' ? (task.earned_amount > 0 ? `+${format(task.earned_amount)}` : format(0)) : `+${format(task.earned_amount)}`}
@@ -207,10 +220,10 @@ export default function RecordPage() {
                                 <div className="text-right flex flex-col items-end gap-2">
                                     {statusBadge(task.status)}
                                     {task.status === 'pending' && (
-                                        <button 
+                                        <button
                                             onClick={() => handleSubmitPending(task.task_item_id)}
                                             disabled={isSubmitting}
-                                            className={`px-3 py-1 rounded-lg bg-primary text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all
+                                            className={`px-3 py-1.5 rounded-lg bg-primary text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all
                                                 ${isSubmitting && submittingTaskId === task.task_item_id ? 'opacity-50 cursor-wait' : 'hover:scale-105 active:scale-95 cursor-pointer'}
                                             `}
                                         >

@@ -55,20 +55,20 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
     if (!isOpen || !bundle) return null;
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 animate-fade-in md:pl-72">
+        <div className="fixed inset-0 z-[300] flex items-start justify-center p-4 pt-16 md:pt-24 animate-fade-in md:pl-72 overflow-hidden">
             {/* Backdrop with extreme blur and amber tint */}
             <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl" />
 
             {/* Modal Container */}
             <div
-                className="relative w-full max-w-[360px] h-auto max-h-[95vh] glass-card-glow overflow-y-auto animate-scale-in border border-amber-500/30 shadow-[0_0_80px_rgba(245,158,11,0.4)] rounded-[32px] z-10 flex flex-col"
+                className="relative w-full max-w-[360px] glass-card-glow animate-scale-in border border-amber-500/30 shadow-[0_0_80px_rgba(245,158,11,0.4)] rounded-[40px] z-10 flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Premium Background Effects */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/30 blur-[60px] rounded-full pointer-events-none animate-pulse" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-600/30 blur-[40px] rounded-full pointer-events-none animate-pulse" />
 
-                <div className="p-8 flex-1 flex flex-col relative">
+                <div className="p-6 flex-1 flex flex-col relative text-center items-center w-full">
                     {/* Floating Celebration Icons */}
                     <div className="absolute -top-4 -left-4 animate-bounce delay-75">
                         <Star size={24} className="text-amber-400 fill-amber-400 opacity-50" />
@@ -78,7 +78,7 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
                     </div>
 
                     {/* Bundle Header */}
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-4 w-full">
                         <div className="flex items-center gap-2">
                             <Gift size={16} className="text-amber-500 animate-bounce" />
                             <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">Surprise Unlocked!</span>
@@ -90,7 +90,7 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
                     </div>
 
                     {/* Product Row - COMPACT HORIZONTAL */}
-                    <div className="flex items-center gap-5 mb-8 text-left">
+                    <div className="flex items-center gap-5 mb-4 text-left w-full">
                         {bundle.taskItem?.image_url ? (
                             <div className="w-20 h-20 rounded-2xl bg-white/5 border border-amber-500/40 p-1.5 shrink-0 relative group overflow-hidden shadow-2xl">
                                 <img
@@ -111,14 +111,14 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
                             <h2 className="text-lg font-black text-white uppercase tracking-tight line-clamp-2 leading-tight drop-shadow-lg">
                                 Wow! Lucky You!
                             </h2>
-                            <p className="text-[10px] text-amber-200/80 mt-2 leading-tight uppercase font-bold tracking-wider">
+                            <p className="text-[10px] text-amber-200/80 mt-1 leading-tight uppercase font-bold tracking-wider">
                                 You have gotten a special bundle!
                             </p>
                         </div>
                     </div>
 
                     {/* Financial Summary - COMPACT GLASS CARD */}
-                    <div className="p-5 mb-8 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.08] to-orange-600/[0.08] backdrop-blur-md space-y-5 relative overflow-hidden group">
+                    <div className="p-4 mb-4 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.08] to-orange-600/[0.08] backdrop-blur-md space-y-4 relative overflow-hidden group w-full">
                         <div className="absolute -right-4 -top-4 w-16 h-16 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all" />
 
                         <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] px-1">
@@ -154,7 +154,7 @@ export default function BundledPackageModal({ isOpen, bundle, onAccept }: Bundle
                     </div>
 
                     {/* Requirement Alert */}
-                    <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl mb-8">
+                    <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl mb-4 w-full">
                         <ShieldCheck size={16} className="text-red-500 shrink-0 mt-0.5" />
                         <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest leading-relaxed text-left">
                             MANDATORY: Reserved assets secured. Accept this surprise bundle to unlock remaining tasks.
