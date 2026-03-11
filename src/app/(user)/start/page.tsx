@@ -210,13 +210,6 @@ export default function StartPage() {
             return;
         }
 
-        if (profile?.pending_bundle) {
-            setMatchingStatus("You have a pending order to submit");
-            setLockMessage("You have a pending order to submit. Please check your activity records.");
-            setTimeout(() => setLockMessage(null), 3000);
-            return;
-        }
-
         if (profile && profile.wallet_balance < 0) {
             setShowPendingWarning(true);
             return;
