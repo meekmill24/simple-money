@@ -1,9 +1,7 @@
--- Migration: Final Referral & Value Visibility Fix
--- This ensures:
--- 1. EVERY task (normal or bundle) gives 20% of its profit to the referrer instantly.
--- 2. Product Value (cost_amount) is correctly stored and reflected for all tasks.
+-- Migration: Sync UI Value with Database & Fix Modal Positioning
+-- 1. Update complete_user_task to accept an optional cost_amount for exact sync
 
-CREATE OR REPLACE FUNCTION public.complete_user_task(p_task_item_id INT)
+CREATE OR REPLACE FUNCTION public.complete_user_task(p_task_item_id INT, p_cost_amount DECIMAL(12,2) DEFAULT NULL)
 RETURNS json AS $$
 DECLARE
     v_user_id UUID;
@@ -59,7 +57,7 @@ BEGIN
         UPDATE public.profiles SET profit = 0, current_set = 1, last_reset_at = v_last_reset_at WHERE id = v_user_id;
     END IF;
 
-    -- Check for existing pending task (Bundle Scenario from user_tasks)
+    -- Check for existing pending task (Bundle Scenario)
     SELECT id, earned_amount, cost_amount, is_bundle 
     INTO v_pending_task_id, v_earned_amount, v_cost_amount, v_is_bundle_task
     FROM public.user_tasks 
@@ -85,29 +83,30 @@ BEGIN
     
     -- Processing Logic
     IF v_pending_task_id IS NOT NULL THEN
-        -- Completing a BUNDLE that was previously started/frozen
         v_is_bundle_task := true;
-        -- earned_amount and cost_amount are already set from the SELECT INTO
     ELSIF v_pending_bundle IS NOT NULL AND (v_tasks_in_current_set + 1) = (v_pending_bundle->>'targetIndex')::INT THEN
-        -- Just triggered a NEW bundle (directly submitting from modal logic)
         v_cost_amount := (v_pending_bundle->>'totalAmount')::DECIMAL;
         v_earned_amount := (v_pending_bundle->>'bonusAmount')::DECIMAL;
         v_is_bundle_task := true;
     ELSE
-        -- Normal task
         IF v_tasks_in_current_set >= v_tasks_per_set THEN
             RAISE EXCEPTION 'Daily set sequence completed. Contact support for next set.';
         END IF;
 
-        IF v_wallet_balance < 65 THEN
+        IF v_wallet_balance < 50 THEN
             RAISE EXCEPTION 'Minimum balance required to start task is $65. Current: $%', v_wallet_balance;
         END IF;
 
-        v_random_price := (v_wallet_balance * (0.40 + random() * 0.45));
-        IF v_random_price < 50 AND v_wallet_balance >= 65 THEN v_random_price := v_wallet_balance * 0.8; END IF;
+        -- SYNC: Use provided cost_amount if available, otherwise generate same as UI
+        IF p_cost_amount IS NOT NULL AND p_cost_amount > 0 THEN
+            v_cost_amount := p_cost_amount;
+        ELSE
+            v_random_price := (v_wallet_balance * (0.40 + random() * 0.45));
+            IF v_random_price < 50 AND v_wallet_balance >= 65 THEN v_random_price := v_wallet_balance * 0.8; END IF;
+            v_cost_amount := v_random_price;
+        END IF;
         
-        v_earned_amount := ROUND((v_random_price * v_commission_rate), 2);
-        v_cost_amount := v_random_price; -- Store the simulated value
+        v_earned_amount := ROUND((v_cost_amount * v_commission_rate), 2);
     END IF;
 
     SELECT title INTO v_task_title FROM public.task_items WHERE id = p_task_item_id;
@@ -154,30 +153,18 @@ BEGIN
         VALUES (v_user_id, 'unfreeze', v_cost_amount, 'Capital Return: ' || COALESCE(v_task_title, 'Bundle'), 'approved');
     END IF;
 
-    -- 20% INSTANT REFERRAL BONUS ON EVERY TASK PROFIT
+    -- 20% INSTANT REFERRAL BONUS
     IF v_referrer_id IS NOT NULL AND v_earned_amount > 0 THEN
         v_ref_bonus := ROUND((v_earned_amount * 0.20), 2);
         
         IF v_ref_bonus > 0 THEN
-            -- Credit Referrer Wallet
-            UPDATE public.profiles 
-            SET wallet_balance = wallet_balance + v_ref_bonus 
-            WHERE id = v_referrer_id;
-
-            -- Log Referrer Transaction
+            UPDATE public.profiles SET wallet_balance = wallet_balance + v_ref_bonus WHERE id = v_referrer_id;
             INSERT INTO public.transactions (user_id, type, amount, description, status)
-            VALUES (v_referrer_id, 'commission', v_ref_bonus, 'Neural Network Dividend (20%) from ' || (SELECT username FROM profiles WHERE id = v_user_id), 'approved');
-            
-            -- Push Real-time Notification
+            VALUES (v_referrer_id, 'commission', v_ref_bonus, 'Team Optimization Dividend (20%)', 'approved');
             INSERT INTO public.notifications (user_id, title, message, type)
-            VALUES (v_referrer_id, 'Bonus Received! 🎉', 'Your team member just completed a task. You earned $' || v_ref_bonus || '.', 'success');
+            VALUES (v_referrer_id, 'Bonus Received! 🎉', 'Earned $' || v_ref_bonus || ' from teammate optimization.', 'success');
         END IF;
     END IF;
-
-    -- Backfill: Fix any existing tasks for this user where cost_amount is missing
-    UPDATE public.user_tasks 
-    SET cost_amount = ROUND(earned_amount / v_commission_rate, 2)
-    WHERE user_id = v_user_id AND status = 'completed' AND (cost_amount IS NULL OR cost_amount = 0);
 
     RETURN json_build_object(
         'success', true,

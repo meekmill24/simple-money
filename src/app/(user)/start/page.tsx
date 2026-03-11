@@ -323,7 +323,7 @@ export default function StartPage() {
         setModalOpen(true);
     };
 
-    const handleSubmitTask = async (item: TaskItem) => {
+    const handleSubmitTask = async (item: TaskItem, costAmount?: number) => {
         if (isSubmitting) return;
 
         // Detailed check for return reasons
@@ -347,11 +347,12 @@ export default function StartPage() {
         }
 
         setIsSubmitting(true);
-        console.log("Submitting optimization for system ID:", item.id);
+        console.log("Submitting optimization for system ID:", item.id, "Value:", costAmount);
 
         try {
             const { data, error } = await supabase.rpc('complete_user_task', {
-                p_task_item_id: item.id
+                p_task_item_id: item.id,
+                p_cost_amount: costAmount
             });
 
             if (error) {
