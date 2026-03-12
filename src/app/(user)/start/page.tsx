@@ -91,7 +91,7 @@ export default function StartPage() {
                 const [levelsRes, pastTasksRes, itemsRes] = await Promise.all([
                     supabase.from('levels').select('id, tasks_per_set, sets_per_day, commission_rate').order('price', { ascending: true }),
                     supabase.from('user_tasks').select('task_item_id, status').eq('user_id', profile.id).neq('status', 'cancelled'),
-                    supabase.from('task_items').select('id, title, image_url, category').eq('is_active', true).eq('level_id', profile.level_id).limit(300)
+                    supabase.from('task_items').select('*').eq('is_active', true).eq('level_id', profile.level_id).limit(300)
                 ]);
 
                 // 1. Level Logic
