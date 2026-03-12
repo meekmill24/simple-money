@@ -22,6 +22,7 @@ export interface Profile {
     currency: string;
     pending_bundle: any | null;
     notifications_enabled: boolean;
+    wallet_network?: string | null;
     created_at: string;
 }
 

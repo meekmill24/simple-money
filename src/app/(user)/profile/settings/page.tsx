@@ -37,12 +37,6 @@ export default function SettingsPage() {
     }, [profile]);
 
     const handleUpdateProfileSetting = async (field: 'language' | 'currency' | 'notifications_enabled', value: any) => {
-        if (field === 'notifications_enabled') {
-            setNotifications(value);
-            localStorage.setItem('notifications_enabled', String(value));
-            return;
-        }
-
         if (!user) return;
         try {
             const { error } = await supabase.from('profiles').update({ [field]: value }).eq('id', user.id);
@@ -56,6 +50,7 @@ export default function SettingsPage() {
                 updateContextCurrency(value as any);
             } else if (field === 'notifications_enabled') {
                 setNotifications(value);
+                localStorage.setItem('notifications_enabled', String(value));
             }
             
             await refreshProfile();

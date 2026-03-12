@@ -18,6 +18,9 @@ export default function BindWalletPage() {
         if (profile?.wallet_address) {
             setWalletAddress(profile.wallet_address);
         }
+        if (profile?.wallet_network) {
+            setNetwork(profile.wallet_network as any);
+        }
     }, [profile]);
 
     const handleSave = async (e: React.FormEvent) => {
@@ -53,13 +56,16 @@ export default function BindWalletPage() {
         try {
             const { error } = await supabase
                 .from('profiles')
-                .update({ wallet_address: walletAddress })
+                .update({ 
+                    wallet_address: walletAddress,
+                    wallet_network: network
+                })
                 .eq('id', profile?.id);
 
             if (error) throw error;
 
             await refreshProfile();
-            setMessage({ type: 'success', text: 'Wallet address bound successfully' });
+            setMessage({ type: 'success', text: 'Wallet configuration saved successfully' });
         } catch (error: any) {
             setMessage({ type: 'error', text: error.message || 'Failed to bind wallet address' });
         } finally {
