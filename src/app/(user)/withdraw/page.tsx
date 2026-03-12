@@ -31,7 +31,7 @@ export default function WithdrawPage() {
     const { profile, refreshProfile } = useAuth();
     const [amount, setAmount] = useState('');
     const [walletAddress, setWalletAddress] = useState(profile?.wallet_address || '');
-    const [network, setNetwork] = useState<'TRX' | 'BEP20' | 'ERC20'>('TRX');
+    const [network, setNetwork] = useState<'TRX' | 'BEP20' | 'ERC20' | 'BTC'>('TRX');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
@@ -159,7 +159,7 @@ export default function WithdrawPage() {
                 <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-black text-text-primary dark:text-white leading-none">${balance.toFixed(2)}</span>
                     <span className="text-xs font-black text-success uppercase tracking-widest">
-                        {network === 'ERC20' ? 'ETH' : 'USDT'}
+                        {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'}
                     </span>
                 </div>
                 
@@ -198,7 +198,7 @@ export default function WithdrawPage() {
                                     className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-[24px] py-6 pl-14 pr-6 text-3xl font-black text-text-primary dark:text-white placeholder:text-text-secondary/10 focus:border-primary/50 focus:bg-primary/5 transition-all outline-none"
                                 />
                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 text-text-secondary text-xs font-black uppercase tracking-widest opacity-40">
-                                    {network === 'ERC20' ? 'ETH' : 'USDT'}
+                                    {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'}
                                 </div>
                             </div>
                             
@@ -213,10 +213,14 @@ export default function WithdrawPage() {
                                     >
                                         <span>${val.toLocaleString()}</span>
                                         <img 
-                                            src={network === 'ERC20' ? "https://cryptologos.cc/logos/ethereum-eth-logo.png" : "https://cryptologos.cc/logos/tether-usdt-logo.png"} 
-                                            className="w-3.5 h-3.5 object-contain opacity-70" 
-                                            alt=""
-                                        />
+                                        src={
+                                            network === 'ERC20' ? "https://cryptologos.cc/logos/ethereum-eth-logo.png" : 
+                                            network === 'BTC' ? "https://cryptologos.cc/logos/bitcoin-btc-logo.png" : 
+                                            "https://cryptologos.cc/logos/tether-usdt-logo.png"
+                                        } 
+                                        className="w-3.5 h-3.5 object-contain opacity-70" 
+                                        alt=""
+                                    />
                                     </button>
                                 ))}
                                 <button
@@ -232,11 +236,12 @@ export default function WithdrawPage() {
                         {/* Network Switcher */}
                         <div className="space-y-4">
                             <label className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] block">Target Network</label>
-                            <div className="grid grid-cols-3 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
                                 {[
                                     { id: 'TRX', label: 'USDT-TRC20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
                                     { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
-                                    { id: 'ERC20', label: 'ETH', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' }
+                                    { id: 'ERC20', label: 'ETH', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
+                                    { id: 'BTC', label: 'BTC', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' }
                                 ].map(net => (
                                     <button
                                         key={net.id}
@@ -247,7 +252,7 @@ export default function WithdrawPage() {
                                             : 'text-text-secondary hover:bg-white/5 hover:text-white border border-transparent'}`}
                                     >
                                         <img src={net.icon} alt="" className="w-5 h-5 object-contain" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest">{net.id === 'ERC20' ? 'ETH' : net.label}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest">{net.id === 'ERC20' ? 'ETH' : net.id === 'BTC' ? 'BTC' : net.label}</span>
                                     </button>
                                 ))}
                             </div>
@@ -256,7 +261,7 @@ export default function WithdrawPage() {
                         {/* Wallet Field */}
                         <div className="space-y-4">
                             <label className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] block">
-                                {network === 'ERC20' ? 'Ethereum (ETH)' : network === 'BEP20' ? 'USDT BEP-20' : 'USDT TRC-20'} Address
+                                {network === 'ERC20' ? 'Ethereum (ETH)' : network === 'BEP20' ? 'USDT BEP-20' : network === 'BTC' ? 'Bitcoin (BTC)' : 'USDT TRC-20'} Address
                             </label>
                             <div className="relative group">
                                 <Wallet size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-primary-light transition-all group-focus-within:scale-110" />
@@ -264,7 +269,7 @@ export default function WithdrawPage() {
                                     type="text"
                                     value={walletAddress}
                                     onChange={(e) => setWalletAddress(e.target.value)}
-                                    placeholder={`Enter ${network === 'ERC20' ? 'ETH' : network} Wallet Address`}
+                                    placeholder={`Enter ${network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : network} Wallet Address`}
                                     className="w-full bg-black/40 border border-white/10 rounded-[24px] py-6 pl-14 pr-6 text-base md:text-lg font-black font-mono text-white placeholder:text-text-secondary/10 focus:border-primary/50 focus:bg-primary/5 transition-all outline-none tracking-tight"
                                 />
                             </div>

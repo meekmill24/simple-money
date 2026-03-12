@@ -27,7 +27,7 @@ export default function DepositPage() {
     const { profile } = useAuth();
     const [amount, setAmount] = useState('30');
     const [customAmount, setCustomAmount] = useState('');
-    const [network, setNetwork] = useState<'TRX' | 'BEP20' | 'ERC20'>('TRX');
+    const [network, setNetwork] = useState<'TRX' | 'BEP20' | 'ERC20' | 'BTC'>('TRX');
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -36,7 +36,9 @@ export default function DepositPage() {
     const [proofPreview, setProofPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const depositAddress = 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8';
+    const depositAddress = network === 'BTC' 
+        ? '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa' // Example BTC Genesis address as placeholder
+        : 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8';
 
     const finalAmount = customAmount || amount;
 
@@ -144,17 +146,21 @@ export default function DepositPage() {
                 <div>
                     <h2 className="text-2xl font-black text-text-primary dark:text-white uppercase tracking-tight">Add Funds</h2>
                     <p className="text-text-secondary text-xs mt-1 font-bold uppercase tracking-widest">
-                        Deposit via {network === 'ERC20' ? 'ETH' : 'USDT'} ({network})
+                        Deposit via {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'} ({network})
                     </p>
                 </div>
                 <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 px-4 py-2 rounded-xl">
                     <img 
-                        src={network === 'ERC20' ? "/images/crypto/eth.png" : "/images/crypto/usdt.png"} 
-                        alt={network === 'ERC20' ? "ETH" : "USDT"} 
+                        src={
+                            network === 'ERC20' ? "https://cryptologos.cc/logos/ethereum-eth-logo.png" : 
+                            network === 'BTC' ? "https://cryptologos.cc/logos/bitcoin-btc-logo.png" : 
+                            "https://cryptologos.cc/logos/tether-usdt-logo.png"
+                        } 
+                        alt={network} 
                         className="w-8 h-8 object-contain" 
                     />
                     <span className="text-sm font-black text-text-primary dark:text-white uppercase tracking-tighter">
-                        {network === 'ERC20' ? 'ETH' : 'USDT'}
+                        {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'}
                     </span>
                 </div>
             </div>
@@ -170,16 +176,17 @@ export default function DepositPage() {
                         </h3>
 
                         {/* Network Switcher */}
-                        <div className="grid grid-cols-3 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
                             {[
-                                { id: 'TRX', label: 'USDT-TRC20', icon: '/images/crypto/usdt.png' },
-                                { id: 'BEP20', label: 'USDT-BEP20', icon: '/images/crypto/usdt.png' },
-                                { id: 'ERC20', label: 'ETH', icon: '/images/crypto/eth.png' }
+                                { id: 'TRX', label: 'USDT-TRC20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
+                                { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
+                                { id: 'ERC20', label: 'ETH', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
+                                { id: 'BTC', label: 'BTC', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' }
                             ].map(net => (
                                 <button
                                     key={net.id}
                                     onClick={() => setNetwork(net.id as any)}
-                                    className={`py-3.5 rounded-xl flex flex-col items-center gap-1.5 transition-all ${network === net.id 
+                                    className={`py-4 rounded-xl flex flex-col items-center gap-1.5 transition-all ${network === net.id 
                                         ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02] border border-primary-light/30' 
                                         : 'text-text-secondary hover:bg-white/5 hover:text-white border border-transparent'}`}
                                 >
@@ -215,7 +222,7 @@ export default function DepositPage() {
                                             />
                                         </div>
                                         <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">
-                                            {network === 'ERC20' ? 'ETH' : 'USDT'}
+                                            {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'}
                                         </span>
                                     </div>
                                     {amount === String(val) && !customAmount && (
@@ -237,7 +244,7 @@ export default function DepositPage() {
                                     setCustomAmount(e.target.value);
                                     setAmount('');
                                 }}
-                                placeholder={`Enter amount in ${network === 'ERC20' ? 'ETH' : 'USDT'}`}
+                                placeholder={`Enter amount in ${network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'}`}
                                 className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-[20px] py-6 pl-12 pr-6 text-xl font-black text-text-primary dark:text-white placeholder:text-text-secondary/20 focus:border-primary/50 focus:bg-primary/5 transition-all outline-none"
                             />
                         </div>
@@ -309,7 +316,7 @@ export default function DepositPage() {
                         <div className="w-full space-y-4">
                             <div className="text-center">
                                 <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] mb-2">
-                                    {network === 'ERC20' ? 'ETH' : network} Address
+                                    {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : network} Address
                                 </p>
                                 <div className="glass-card px-4 py-4 border border-white/20 flex items-center justify-between group overflow-hidden bg-black/40">
                                     <span className="text-sm md:text-base font-black font-mono text-white truncate max-w-[220px] tracking-tight">{depositAddress}</span>
@@ -342,7 +349,7 @@ export default function DepositPage() {
 
                     <div className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl text-[10px] font-bold text-text-secondary leading-relaxed uppercase tracking-wider italic">
                         <AlertCircle size={14} className="shrink-0 text-warning" />
-                        Only send {network === 'ERC20' ? 'ETH' : 'USDT'} ({network}) to this address. Other assets will be permanently lost and cannot be recovered.
+                        Only send {network === 'ERC20' ? 'ETH' : network === 'BTC' ? 'BTC' : 'USDT'} ({network}) to this address. Other assets will be permanently lost and cannot be recovered.
                     </div>
                 </div>
 
