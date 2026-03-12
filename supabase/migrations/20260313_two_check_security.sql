@@ -69,7 +69,7 @@ BEGIN
 
     -- 3. CHECK 1: DEFICIT SETTLEMENT (Blocks ALL Submissions including Pending)
     IF v_wallet_balance < 0 THEN
-         RAISE EXCEPTION 'Account in deficit. Please settle your balance through the recharge portal or wait for customer service to clear your negative balance to continue.';
+         RAISE EXCEPTION 'Account in deficit. Please settle your balance through the recharge portal or Contact customer service to clear your negative balance to continue.';
     END IF;
 
     -- 4. CHECK FOR PENDING TASK (Order Submission)

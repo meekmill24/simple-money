@@ -238,8 +238,12 @@ export default function RecordPage() {
                                     </div>
                                     {task.is_bundle && task.status === 'pending' && (
                                         <div className="flex flex-col border-l md:border-l-0 md:border-t border-white/10 pl-4 md:pl-0 md:pt-1.5">
-                                            <span className="text-[9px] text-danger/60 uppercase tracking-widest font-black">Hold</span>
-                                            <span className="text-[11px] font-black text-danger">-{format(Math.abs(profile?.wallet_balance || 0))}</span>
+                                            <span className="text-[9px] text-amber-500/80 uppercase tracking-widest font-black">
+                                                {profile && profile.wallet_balance < 0 ? 'Deficit' : 'Hold Status'}
+                                            </span>
+                                            <span className={`text-[11px] font-black ${profile && profile.wallet_balance < 0 ? 'text-danger' : 'text-amber-500'}`}>
+                                                {profile && profile.wallet_balance < 0 ? `-${format(Math.abs(profile.wallet_balance))}` : format(profile?.wallet_balance || 0)}
+                                            </span>
                                         </div>
                                     )}
                                 </div>
