@@ -30,12 +30,13 @@ export default function RecordPage() {
         if (!profile) return;
         const { data } = await supabase
             .from('user_tasks')
-            .select('*, task_item:task_items(*)')
+            .select('id, status, created_at, earned_amount, cost_amount, is_bundle, task_item_id, task_item:task_items(id, title, image_url, category)')
             .eq('user_id', profile.id)
-            .order('created_at', { ascending: false });
+            .order('created_at', { ascending: false })
+            .limit(100);
 
         if (data) {
-            setTasks(data as (UserTask & { task_item: TaskItem })[]);
+            setTasks(data as any);
         }
         setLoading(false);
     };

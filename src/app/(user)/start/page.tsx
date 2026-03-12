@@ -91,12 +91,12 @@ export default function StartPage() {
                 const [levelsRes, pastTasksRes, itemsRes] = await Promise.all([
                     supabase.from('levels').select('id, tasks_per_set, sets_per_day, commission_rate').order('price', { ascending: true }),
                     supabase.from('user_tasks').select('task_item_id, status').eq('user_id', profile.id).neq('status', 'cancelled'),
-                    supabase.from('task_items').select('*').eq('is_active', true).eq('level_id', profile.level_id)
+                    supabase.from('task_items').select('id, title, image_url, category').eq('is_active', true).eq('level_id', profile.level_id).limit(300)
                 ]);
 
                 // 1. Level Logic
                 if (pastTasksRes.data) {
-                    const pending = pastTasksRes.data.some(t => t.status === 'pending');
+                    const pending = (pastTasksRes.data as any[]).some(t => t.status === 'pending');
                     setHasPendingTask(pending);
                 }
                 if (levelsRes.data) {
@@ -116,16 +116,17 @@ export default function StartPage() {
                 }
 
                 // 2. Items logic + Preloading
-                const usedItemIds = (pastTasksRes.data || []).map(t => t.task_item_id);
-                let availableItems = (itemsRes.data || []).filter(item => !usedItemIds.includes(item.id));
+                const usedItemIds = new Set((pastTasksRes.data || []).map(t => t.task_item_id));
+                let availableItems = (itemsRes.data || []).filter(item => !usedItemIds.has(item.id));
 
                 if (availableItems.length === 0 && itemsRes.data && itemsRes.data.length > 0) {
                     availableItems = itemsRes.data;
                 } else if (availableItems.length === 0) {
                     availableItems = Array.from({ length: 24 }).map((_, i) => ({
-                        id: `fallback-${i}`,
+                        id: 0, // Fallback ID
                         title: i % 2 === 0 ? 'Premium electronics hub' : 'Luxury timepiece collection',
                         image_url: `https://picsum.photos/seed/prod-${i}/400/400`,
+                        category: 'premium',
                         price: 150 + (i * 10),
                         commission_rate: 0.0045,
                         level_id: profile.level_id
@@ -135,11 +136,6 @@ export default function StartPage() {
                 const shuffled = [...availableItems].sort(() => 0.5 - Math.random());
                 const selectedItems = shuffled.slice(0, 24);
                 setItems(selectedItems);
-
-                selectedItems.forEach(item => {
-                    const img = new Image();
-                    img.src = item.image_url;
-                });
 
             } catch (err) {
                 console.error("Error loading start page data:", err);
