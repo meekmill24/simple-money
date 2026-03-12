@@ -85,49 +85,57 @@ export default function HomePage() {
     }, [profile]);
 
     return (
-        <div className="space-y-8 animate-fade-in transition-colors duration-300">
+        <div className="space-y-8 animate-fade-in transition-colors duration-300 relative -mt-16 md:-mt-20">
             
 
-            <div className="relative group perspective-1000">
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-accent/30 rounded-[32px] blur-xl opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative glass-card-strong p-8 md:p-12 min-h-[220px] flex flex-col justify-center overflow-hidden">
-                    {/* Animated background elements */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -mr-32 -mt-32 animate-pulse-slow"></div>
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/10 rounded-full blur-[60px] -ml-24 -mb-24 animate-pulse-slow"></div>
-                    
-                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="space-y-4 max-w-2xl">
-                            <div className="flex items-center gap-3 animate-slide-up">
-                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-primary to-accent p-[1px]">
-                                    <div className="w-full h-full rounded-[15px] bg-white dark:bg-surface flex items-center justify-center text-2xl animate-blob-fluid">👋</div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <div className="flex items-center gap-3">
-                                        <Link href="/profile" className="hover:opacity-80 transition-opacity">
-                                            <h1 className="text-xl md:text-3xl font-black text-text-primary tracking-tight drop-shadow-lg leading-tight uppercase">
-                                                {t('welcome_back')}, <span className="text-primary-light">{profile?.username || 'User'}</span>
-                                            </h1>
-                                        </Link>
-                                        <button 
-                                            onClick={() => signOut()}
-                                            className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-text-secondary hover:text-danger hover:bg-danger/10 transition-all group/exit"
-                                            title={t('sign_out')}
-                                        >
-                                            <LogOut size={18} className="group-hover/exit:scale-110 transition-transform" />
-                                        </button>
-                                    </div>
-                                    <p className="text-[10px] md:text-sm font-black text-text-secondary uppercase tracking-[0.3em] opacity-80 animate-slide-up [animation-delay:0.1s]">
-                                        NEURAL NETWORK OPTIMIZATION ACTIVE
-                                    </p>
-                                </div>
+            <div className="glass-card p-0 mb-8 md:mb-12 relative overflow-hidden group border-primary/20 rounded-[32px] md:rounded-[40px] shadow-[0_0_30px_rgba(157,80,187,0.15)] animate-fade-in">
+                <div className="absolute inset-0 z-0">
+                    <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-15 md:opacity-20 scale-100 transition-transform duration-1000">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-particles-looping-background-28384-large.mp4" type="video/mp4" />
+                    </video>
+                    <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
+                </div>
+
+                <div className="p-5 md:p-8 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-[20px] md:rounded-[24px] bg-gradient-to-br from-primary to-accent p-1 shadow-lg shadow-primary/20 shrink-0">
+                            <div className="w-full h-full rounded-[16px] md:rounded-[18px] bg-surface flex items-center justify-center border border-black/10 dark:border-white/10 overflow-hidden">
+                                <span className="text-xl md:text-2xl font-black text-text-primary">{profile?.username?.[0].toUpperCase() || 'U'}</span>
                             </div>
                         </div>
-                        
-                        {/* Decorative floating icon */}
-                        <div className="hidden lg:block animate-float">
-                            <div className="w-16 h-16 rounded-3xl bg-surface/10 backdrop-blur-md border border-black/10 dark:border-white/10 flex items-center justify-center rotate-12 shadow-2xl relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <TrendingUp className="text-primary-light relative z-10" size={32} />
+                        <div>
+                            <h1 className="text-xl md:text-2xl font-black text-text-primary tracking-tight uppercase leading-tight">
+                                {t('welcome_back')}, <br className="md:hidden" />
+                                <span className="text-primary-light">{profile?.username || 'User'}</span>
+                            </h1>
+                            <p className="text-[10px] md:text-xs text-text-secondary mt-1 font-medium italic opacity-80 uppercase tracking-widest">
+                                {t('optimization_hub_active') || 'Optimization hub active'}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:block h-10 w-[1px] bg-black/10 dark:bg-white/10" />
+                        <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-4">
+                            <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5 mr-auto md:mr-0">
+                                <TrendingUp size={20} className="text-primary-light animate-pulse" />
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] font-black text-primary uppercase tracking-[0.25em] opacity-80">Available Balance</span>
+                                    <span className="text-xl font-black text-text-primary tracking-tight leading-none mt-1 animate-scale-in">{format(profile?.wallet_balance || 0)}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-accent/10 border border-accent/20 shadow-lg shadow-accent/5">
+                                <TrendingUp size={20} className="text-accent-light animate-bounce" />
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] font-black text-accent uppercase tracking-[0.25em] opacity-80">Daily profit</span>
+                                    <div className="flex items-center gap-1.5 mt-1">
+                                        <span className="text-xl font-black text-text-primary tracking-tight leading-none animate-scale-in">{format(profile?.profit || 0)}</span>
+                                        <span className="text-[10px] font-black text-accent-light opacity-60">USDT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                                <Sparkles size={16} className="text-primary animate-pulse" />
+                                <span className="text-[10px] font-black text-text-primary/40 uppercase tracking-widest font-mono">ID: {profile?.referral_code || '------'}</span>
                             </div>
                         </div>
                     </div>

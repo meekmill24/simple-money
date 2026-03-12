@@ -152,9 +152,9 @@ export default function DepositPage() {
                 <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 px-4 py-2 rounded-xl">
                     <img 
                         src={
-                            network === 'ERC20' ? "https://cryptologos.cc/logos/ethereum-eth-logo.png" : 
-                            network === 'BTC' ? "https://cryptologos.cc/logos/bitcoin-btc-logo.png" : 
-                            "https://cryptologos.cc/logos/tether-usdt-logo.png"
+                            network === 'ERC20' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" : 
+                            network === 'BTC' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" : 
+                            "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png"
                         } 
                         alt={network} 
                         className="w-8 h-8 object-contain" 
@@ -178,10 +178,10 @@ export default function DepositPage() {
                         {/* Network Switcher */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
                             {[
-                                { id: 'TRX', label: 'USDT-TRC20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
-                                { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
-                                { id: 'ERC20', label: 'ETH', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
-                                { id: 'BTC', label: 'BTC', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' }
+                                { id: 'TRX', label: 'USDT-TRC20', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                                { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                                { id: 'ERC20', label: 'ETH', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png' },
+                                { id: 'BTC', label: 'BTC', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png' }
                             ].map(net => (
                                 <button
                                     key={net.id}
@@ -216,7 +216,11 @@ export default function DepositPage() {
                                                 ${val}
                                             </span>
                                             <img 
-                                                src={network === 'ERC20' ? "/images/crypto/eth.png" : "/images/crypto/usdt.png"} 
+                                                src={
+                                                    network === 'ERC20' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" : 
+                                                    network === 'BTC' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" : 
+                                                    "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png"
+                                                } 
                                                 className="w-4 h-4 object-contain opacity-60" 
                                                 alt=""
                                             />

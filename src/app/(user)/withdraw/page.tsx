@@ -213,14 +213,14 @@ export default function WithdrawPage() {
                                     >
                                         <span>${val.toLocaleString()}</span>
                                         <img 
-                                        src={
-                                            network === 'ERC20' ? "https://cryptologos.cc/logos/ethereum-eth-logo.png" : 
-                                            network === 'BTC' ? "https://cryptologos.cc/logos/bitcoin-btc-logo.png" : 
-                                            "https://cryptologos.cc/logos/tether-usdt-logo.png"
-                                        } 
-                                        className="w-3.5 h-3.5 object-contain opacity-70" 
-                                        alt=""
-                                    />
+                                            src={
+                                                network === 'ERC20' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" : 
+                                                network === 'BTC' ? "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" : 
+                                                "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png"
+                                            } 
+                                            className="w-3.5 h-3.5 object-contain opacity-70" 
+                                            alt=""
+                                        />
                                     </button>
                                 ))}
                                 <button
@@ -238,10 +238,10 @@ export default function WithdrawPage() {
                             <label className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] block">Target Network</label>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-black/40 rounded-[24px] border border-white/5">
                                 {[
-                                    { id: 'TRX', label: 'USDT-TRC20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
-                                    { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
-                                    { id: 'ERC20', label: 'ETH', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
-                                    { id: 'BTC', label: 'BTC', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' }
+                                    { id: 'TRX', label: 'USDT-TRC20', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                                    { id: 'BEP20', label: 'USDT-BEP20', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                                    { id: 'ERC20', label: 'ETH', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png' },
+                                    { id: 'BTC', label: 'BTC', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png' }
                                 ].map(net => (
                                     <button
                                         key={net.id}
