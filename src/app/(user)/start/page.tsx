@@ -362,7 +362,7 @@ export default function StartPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto pb-12 relative pt-0">
+        <div className="max-w-6xl mx-auto pb-12 relative mt-[-28px]">
             <div className="absolute top-1/4 -left-20 w-80 h-80 glass-prism rounded-full opacity-20 pointer-events-none blur-xl animate-pulse-glow" />
             <div className="absolute bottom-1/4 -right-20 w-96 h-96 glass-prism rounded-full opacity-20 pointer-events-none blur-2xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
 
@@ -383,7 +383,7 @@ export default function StartPage() {
                 </div>
             )}
 
-            <div className="glass-card p-0 mb-8 md:mb-12 relative overflow-hidden group border-primary/20 rounded-[32px] md:rounded-[40px] shadow-[0_0_30px_rgba(157,80,187,0.15)] animate-slide-up">
+            <div className="glass-card p-0 mb-8 md:mb-12 relative overflow-hidden group border-primary/20 rounded-[32px] md:rounded-[40px] shadow-[0_0_30px_rgba(157,80,187,0.15)] animate-fade-in">
                 <div className="absolute inset-0 z-0">
                     <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-15 md:opacity-20 scale-100 transition-transform duration-1000">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-particles-looping-background-28384-large.mp4" type="video/mp4" />
