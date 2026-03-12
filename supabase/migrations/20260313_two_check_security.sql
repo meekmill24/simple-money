@@ -67,21 +67,20 @@ BEGIN
         UPDATE public.profiles SET profit = 0, current_set = 1, last_reset_at = v_last_reset_at WHERE id = v_user_id;
     END IF;
 
-    -- 3. CHECK FOR PENDING TASK (Order Submission)
+    -- 3. CHECK 1: DEFICIT SETTLEMENT (Blocks ALL Submissions including Pending)
+    IF v_wallet_balance < 0 THEN
+         RAISE EXCEPTION 'Account in deficit. Please settle your balance through the recharge portal or wait for customer service to clear your negative balance to continue.';
+    END IF;
+
+    -- 4. CHECK FOR PENDING TASK (Order Submission)
     SELECT id, earned_amount, cost_amount, is_bundle 
     INTO v_pending_task_id, v_earned_amount, v_cost_amount, v_is_bundle_task
     FROM public.user_tasks 
     WHERE user_id = v_user_id AND task_item_id = p_task_item_id AND status = 'pending'
     LIMIT 1;
 
-    -- 4. APPLY SECURITY CHECKS (Only for NEW tasks)
+    -- 5. APPLY SECURITY CHECKS (Only for NEW tasks)
     IF v_pending_task_id IS NULL THEN
-        -- CHECK 1: DEFICIT SETTLEMENT
-        -- Users must have a non-negative balance to START a new optimization
-        IF v_wallet_balance < 0 THEN
-             RAISE EXCEPTION 'Account in deficit. Please settle your balance through the recharge portal to continue optimization.';
-        END IF;
-
         -- Get level data for limits
         SELECT tasks_per_set, sets_per_day, commission_rate, price
         INTO v_tasks_per_set, v_sets_per_day, v_commission_rate, v_level_price
