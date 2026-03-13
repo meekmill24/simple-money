@@ -374,7 +374,16 @@ export default function StartPage() {
             }
             await refreshProfile();
         } catch (err: any) {
-            alert(`Optimization Failure: ${err?.message || 'Error'}`);
+            const errMsg = err?.message || '';
+            if (errMsg.toLowerCase().includes('duplicate item')) {
+                console.warn("Duplicate exception caught, auto-correcting...");
+                const updatedItems = items.filter(i => i.id !== item.id);
+                setItems(updatedItems);
+                setModalOpen(false);
+                setTimeout(() => handleStart(), 300);
+            } else {
+                alert(`Optimization Failure: ${errMsg || 'Error'}`);
+            }
         } finally {
             setIsSubmitting(false);
         }
