@@ -439,7 +439,7 @@ export default function StartPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto pb-12 relative pt-20 md:pt-[calc(var(--spacing)*200)]">
+        <div className="max-w-6xl mx-auto pb-12 relative start-container-padding">
             <div className="absolute top-1/4 -left-20 w-80 h-80 glass-prism rounded-full opacity-20 pointer-events-none blur-xl animate-pulse-glow" />
             <div className="absolute bottom-1/4 -right-20 w-96 h-96 glass-prism rounded-full opacity-20 pointer-events-none blur-2xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
 
@@ -599,6 +599,7 @@ export default function StartPage() {
                                                 ${isSpinning ? 'scale-95 shadow-none ring-4 ring-primary/20' : 'hover:scale-105 shadow-[0_0_30_rgba(157,80,187,0.4)]'}
                                                 ${(isLocked || (profile?.wallet_balance || 0) < 65 || profile?.pending_bundle) ? 'grayscale opacity-40 !cursor-not-allowed' : ''}
                                             `}
+                                        
                                         >
                                             <div className="absolute inset-0 glass-water opacity-90" />
                                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_25%,rgba(255,255,255,0.4)_0%,transparent_60%)] z-10" />
