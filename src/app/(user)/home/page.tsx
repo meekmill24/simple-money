@@ -50,6 +50,7 @@ export default function HomePage() {
             if (!profile) return;
             setLoading(true);
             
+            try {
                 // Fetch stats and levels concurrently
                 const [allRes, completedRes, pendingRes, levelsResult] = await Promise.all([
                     supabase.from('user_tasks').select('*', { count: 'exact', head: true }).eq('user_id', profile.id),

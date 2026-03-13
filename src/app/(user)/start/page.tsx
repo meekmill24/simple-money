@@ -91,6 +91,7 @@ export default function StartPage() {
             if (!profile?.level_id || !profile?.id) return;
             setIsLoadingData(true);
 
+            try {
                 // Parallelize all initial global data fetches
                 // PERFORMANCE FIX: Only fetch tasks from the last 24 hours for pool filtering
                 const filterDate = profile.last_reset_at ? new Date(profile.last_reset_at).toISOString() : new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
@@ -161,7 +162,9 @@ export default function StartPage() {
                 const selectedItems = shuffled.slice(0, 24);
                 setItems(selectedItems);
                 // Keep the rest of the pool for replacements
-                if (itemsRes.data) (window as any)._allPoolItems = itemsRes.data;
+                if (itemsRes.data) {
+                    (window as any)._allPoolItems = itemsRes.data;
+                }
 
             } catch (err) {
                 console.error("Error loading start page data:", err);
@@ -436,7 +439,7 @@ export default function StartPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto pb-12 relative md:pt-[calc(var(--spacing)*198)]">
+        <div className="max-w-6xl mx-auto pb-12 relative pt-20 md:pt-[calc(var(--spacing)*200)]">
             <div className="absolute top-1/4 -left-20 w-80 h-80 glass-prism rounded-full opacity-20 pointer-events-none blur-xl animate-pulse-glow" />
             <div className="absolute bottom-1/4 -right-20 w-96 h-96 glass-prism rounded-full opacity-20 pointer-events-none blur-2xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
 
@@ -465,7 +468,7 @@ export default function StartPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
                 </div>
 
-                <div className="pt-16 md:pt-20 p-5 md:p-8 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div className="pt-20 md:pt-28 p-5 md:p-8 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                     <div className="flex items-center gap-4 md:gap-6">
                         <div className="w-14 h-14 md:w-16 md:h-16 rounded-[20px] md:rounded-[24px] bg-gradient-to-br from-primary to-accent p-1 shadow-lg shadow-primary/20 shrink-0">
                             <div className="w-full h-full rounded-[16px] md:rounded-[18px] bg-surface flex items-center justify-center border border-black/10 dark:border-white/10 overflow-hidden">
