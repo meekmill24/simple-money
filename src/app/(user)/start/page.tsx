@@ -379,7 +379,7 @@ export default function StartPage() {
         const newFrozen = profile.frozen_amount + bundle.totalAmount + bundle.bonusAmount;
         await supabase.from('profiles').update({ wallet_balance: newBalance, frozen_amount: newFrozen, completed_count: (profile.completed_count || 0) + 1 }).eq('id', profile.id);
         if (pendingTaskItem) {
-            await supabase.from('user_tasks').insert({ user_id: profile.id, task_item_id: pendingTaskItem.id, status: 'pending', earned_amount: bundle.bonusAmount, cost_amount: bundle.totalAmount, is_bundle: true, completed_at: new Date().toISOString() });
+            await supabase.from('user_tasks').insert({ user_id: profile.id, task_item_id: pendingTaskItem.id, status: 'pending', earned_amount: bundle.bonusAmount, cost_amount: bundle.totalAmount, is_bundle: true });
             setPendingTaskItem(null);
         }
         setBundleModal(false);

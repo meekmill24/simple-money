@@ -30,7 +30,7 @@ export default function RecordPage() {
         if (!profile) return;
         const { data } = await supabase
             .from('user_tasks')
-            .select('id, status, created_at, earned_amount, cost_amount, is_bundle, task_item_id, task_item:task_items(id, title, image_url, category)')
+            .select('id, status, created_at, completed_at, earned_amount, cost_amount, is_bundle, task_item_id, task_item:task_items(id, title, image_url, category)')
             .eq('user_id', profile.id)
             .order('created_at', { ascending: false })
             .limit(100);
@@ -183,7 +183,7 @@ export default function RecordPage() {
                                 <div className="px-4 md:px-6 py-4 md:py-5 border-r md:border-white/5 flex flex-row md:flex-col items-center md:items-start justify-between md:justify-center gap-2">
                                     <div className="flex flex-col">
                                         <p className="text-[11px] text-text-primary font-bold">
-                                            {new Date(task.created_at).toLocaleDateString(
+                                            {new Date(task.status === 'completed' && task.completed_at ? task.completed_at : task.created_at).toLocaleDateString(
                                                 language === 'English' ? 'en-US' :
                                                     language === 'Spanish' ? 'es-ES' :
                                                         language === 'French' ? 'fr-FR' :
@@ -194,7 +194,7 @@ export default function RecordPage() {
                                             )}
                                         </p>
                                         <p className="text-[10px] opacity-40 font-bold uppercase tracking-tighter">
-                                            {new Date(task.created_at).toLocaleTimeString(
+                                            {new Date(task.status === 'completed' && task.completed_at ? task.completed_at : task.created_at).toLocaleTimeString(
                                                 language === 'English' ? 'en-US' :
                                                     language === 'Spanish' ? 'es-ES' :
                                                         language === 'French' ? 'fr-FR' :
