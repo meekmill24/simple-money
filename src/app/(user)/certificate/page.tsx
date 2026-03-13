@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { ArrowLeft, Award, ShieldCheck, CheckCircle2, Globe, Building, Download, Share2 } from 'lucide-react';
