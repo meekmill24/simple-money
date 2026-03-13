@@ -674,11 +674,11 @@
 
 /* Custom Start Page Padding */
 .start-container-padding {
-  padding-top: 1.5rem; /* Mobile: Content starts ~24px below header */
+  padding-top: 1.5rem; /* Mobile */
 }
 
 @media (min-width: 1024px) {
   .start-container-padding {
-    padding-top: 2.5rem; /* Laptop: Combined with layout pt-20, this creates ~120px total gap */
+    padding-top: 200px !important; /* Forces the banner down exactly as requested */
   }
 }
