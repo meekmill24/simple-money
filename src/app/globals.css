@@ -674,19 +674,11 @@
 
 /* Custom Start Page Padding */
 .start-container-padding {
-  padding-top: 20px;
-  /* Mobile - subtle gap below layout header */
-}
-
-@media (min-width: 768px) {
-  .start-container-padding {
-    padding-top: 60px;
-  }
+  padding-top: 1rem; /* Small gap below the layout header */
 }
 
 @media (min-width: 1024px) {
   .start-container-padding {
-    padding-top: 200px;
-    /* Laptop - exactly 200px below the layout header */
+    padding-top: 1.5rem;
   }
 }

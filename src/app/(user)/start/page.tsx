@@ -443,24 +443,8 @@ export default function StartPage() {
             <div className="absolute top-1/4 -left-20 w-80 h-80 glass-prism rounded-full opacity-20 pointer-events-none blur-xl animate-pulse-glow" />
             <div className="absolute bottom-1/4 -right-20 w-96 h-96 glass-prism rounded-full opacity-20 pointer-events-none blur-2xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
 
-            {isProfileIncomplete && (
-                <div className="mb-6 glass-card border-warning/30 p-4 flex items-center justify-between gap-4 animate-scale-in">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-warning shrink-0">
-                            <Sparkles size={20} className="animate-pulse" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-black text-text-primary uppercase tracking-tight">{t('complete_your_profile')}</p>
-                            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Add your phone number and password to secure your account.</p>
-                        </div>
-                    </div>
-                    <Link href="/profile/info" className="px-5 py-2.5 rounded-xl bg-warning text-black font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
-                        {t('complete_now')}
-                    </Link>
-                </div>
-            )}
-
-            <div className="glass-card p-0 mb-8 md:mb-12 relative overflow-hidden group border-primary/20 rounded-[32px] md:rounded-[40px] shadow-[0_0_30px_rgba(157,80,187,0.15)] animate-fade-in">
+            {/* Banner / Profile Card */}
+            <div className="glass-card p-0 mb-6 md:mb-10 relative overflow-hidden group border-primary/20 rounded-[32px] md:rounded-[40px] shadow-[0_0_30px_rgba(157,80,187,0.15)] animate-fade-in">
                 <div className="absolute inset-0 z-0">
                     <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-15 md:opacity-20 scale-100 transition-transform duration-1000">
                         <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-particles-looping-background-28384-large.mp4" type="video/mp4" />
@@ -468,7 +452,7 @@ export default function StartPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
                 </div>
 
-                <div className="pt-20 md:pt-28 p-5 md:p-8 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div className="p-5 md:p-8 pt-8 md:pt-10 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                     <div className="flex items-center gap-4 md:gap-6">
                         <div className="w-14 h-14 md:w-16 md:h-16 rounded-[20px] md:rounded-[24px] bg-gradient-to-br from-primary to-accent p-1 shadow-lg shadow-primary/20 shrink-0">
                             <div className="w-full h-full rounded-[16px] md:rounded-[18px] bg-surface flex items-center justify-center border border-black/10 dark:border-white/10 overflow-hidden">
@@ -581,6 +565,23 @@ export default function StartPage() {
                     </div>
                 </div>
             </div>
+
+            {isProfileIncomplete && (
+                <div className="mb-8 glass-card border-warning/30 p-4 flex items-center justify-between gap-4 animate-scale-in">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-warning shrink-0">
+                            <Sparkles size={20} className="animate-pulse" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-black text-text-primary uppercase tracking-tight">{t('complete_your_profile')}</p>
+                            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">Add your phone number and password to secure your account.</p>
+                        </div>
+                    </div>
+                    <Link href="/profile/info" className="px-5 py-2.5 rounded-xl bg-warning text-black font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
+                        {t('complete_now')}
+                    </Link>
+                </div>
+            )}
 
             <div className="relative flex flex-col items-center justify-center py-6 md:py-10">
                 <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[500px] md:h-[600px] bg-primary/10 rounded-full blur-[100px] md:blur-[160px] transition-opacity duration-1000 ${isSpinning ? 'opacity-100' : 'opacity-40'}`} />
