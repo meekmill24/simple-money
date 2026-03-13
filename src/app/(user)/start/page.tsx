@@ -116,8 +116,15 @@ export default function StartPage() {
                 }
 
                 // 2. Items logic + Preloading
-                const usedItemIds = new Set((pastTasksRes.data || []).map(t => t.task_item_id));
-                let availableItems = (itemsRes.data || []).filter(item => !usedItemIds.has(item.id));
+                // Only filter items completed today (since last reset) for current pool
+                const lastResetDate = profile.last_reset_at ? new Date(profile.last_reset_at) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+                const recentUsedIds = new Set(
+                    (pastTasksRes.data || [])
+                        .filter(t => new Date(t.created_at) > lastResetDate)
+                        .map(t => t.task_item_id)
+                );
+                
+                let availableItems = (itemsRes.data || []).filter(item => !recentUsedIds.has(item.id));
 
                 if (availableItems.length === 0 && itemsRes.data && itemsRes.data.length > 0) {
                     availableItems = itemsRes.data;
@@ -137,6 +144,8 @@ export default function StartPage() {
                 const shuffled = [...availableItems].sort(() => 0.5 - Math.random());
                 const selectedItems = shuffled.slice(0, 24);
                 setItems(selectedItems);
+                // Keep the rest of the pool for replacements
+                if (itemsRes.data) (window as any)._allPoolItems = itemsRes.data;
 
             } catch (err) {
                 console.error("Error loading start page data:", err);
@@ -326,6 +335,23 @@ export default function StartPage() {
                 setModalOpen(false);
                 setProfitAdded(earnedAmount > 0 ? earnedAmount : 0);
                 setTimeout(() => setProfitAdded(null), 4000);
+                
+                // REPLACE COMPLETED ITEM IN POOL
+                const pool = (window as any)._allPoolItems || [];
+                if (pool.length > 0) {
+                    const currentItems = [...items];
+                    const usedIds = new Set(currentItems.map(i => i.id));
+                    const unusedInPool = pool.filter((p: any) => !usedIds.has(p.id) && p.id !== item.id);
+                    if (unusedInPool.length > 0) {
+                        const newItem = unusedInPool[Math.floor(Math.random() * unusedInPool.length)];
+                        const itemIdx = currentItems.findIndex(i => i.id === item.id);
+                        if (itemIdx !== -1) {
+                            currentItems[itemIdx] = newItem;
+                            setItems(currentItems);
+                        }
+                    }
+                }
+
                 if (tasksInCurrentSet + 1 >= tasksPerSet) {
                     setModalSeen(false);
                     setTimeout(() => setShowCompletionModal(true), 1500);
