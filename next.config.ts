@@ -1,6 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-    output: 'standalone',
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
@@ -9,6 +9,8 @@ const nextConfig = {
             },
         ],
     },
+    // Disable standalone mode for Vercel preview compatibility
+    // Enable 'standalone' only for Docker/self-hosted deployments
 };
 
 export default nextConfig;
