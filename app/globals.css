@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", monospace;
+
+  --color-background: #faf9f7;
+  --color-foreground: #1a1a1a;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a1a;
+  --color-primary: #1a1a1a;
+  --color-primary-foreground: #faf9f7;
+  --color-secondary: #f5f3f0;
+  --color-secondary-foreground: #1a1a1a;
+  --color-muted: #e8e5e0;
+  --color-muted-foreground: #6b6b6b;
+  --color-accent: #10b981;
+  --color-accent-foreground: #ffffff;
+  --color-border: #e5e2dd;
+  --color-ring: #1a1a1a;
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
