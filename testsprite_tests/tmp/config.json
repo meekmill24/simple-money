@@ -1,7 +1,38 @@
 {
-  "status": "init",
+  "status": "ready",
   "scope": "codebase",
   "type": "frontend",
   "localEndpoint": "http://localhost:3000/",
-  "serverPort": 52531
+  "serverPort": 52531,
+  "projectName": "simple-money",
+  "needLogin": true,
+  "credentials": {
+    "username": "test@example.com",
+    "password": "testpassword123"
+  },
+  "testRoutes": {
+    "landing": "/",
+    "login": "/login",
+    "signup": "/signup",
+    "home": "/home",
+    "deposit": "/deposit",
+    "withdraw": "/withdraw",
+    "levels": "/levels",
+    "salary": "/salary",
+    "invite": "/invite",
+    "profile": "/profile",
+    "wallet": "/wallet",
+    "start": "/start",
+    "admin": "/dashboard-alpha"
+  },
+  "testCategories": ["functional", "ui-ux", "security", "performance"],
+  "priorityFeatures": [
+    "authentication",
+    "landing-page", 
+    "user-dashboard",
+    "deposits",
+    "withdrawals",
+    "vip-levels",
+    "task-completion"
+  ]
 }

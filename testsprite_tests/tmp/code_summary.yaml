@@ -6,58 +6,246 @@ tech_stack:
   - react
   - tailwindcss
   - supabase
+  - framer-motion
+  - gsap
   - lucide-react
+
 routes:
+  # Public Routes
   - path: /
     file: src/app/page.tsx
     auth_required: false
-    description: Initial entry or login page
+    description: Landing page with hero, features, VIP levels, testimonials, and CTAs
+  - path: /login
+    file: src/app/login/page.tsx
+    auth_required: false
+    description: User login page with email/password authentication
+  - path: /signup
+    file: src/app/signup/page.tsx
+    auth_required: false
+    description: User registration page with referral code support
+  - path: /agreement
+    file: src/app/agreement/page.tsx
+    auth_required: false
+    description: Terms and conditions page
+  - path: /privacy
+    file: src/app/privacy/page.tsx
+    auth_required: false
+    description: Privacy policy page
+
+  # User Routes (Protected)
+  - path: /home
+    file: src/app/(user)/home/page.tsx
+    auth_required: true
+    description: User dashboard with balance, task progress, and quick actions
   - path: /start
     file: src/app/(user)/start/page.tsx
     auth_required: true
-    description: User main dashboard / start page
-  - path: /ctrl-sm-2026/bundles
-    file: src/app/ctrl-sm-2026/bundles/page.tsx
+    description: Task completion interface for earning commissions
+  - path: /deposit
+    file: src/app/(user)/deposit/page.tsx
     auth_required: true
-    description: Admin Bundles Management page
-  - path: /ctrl-sm-2026/users
-    file: src/app/ctrl-sm-2026/users/page.tsx
+    description: Cryptocurrency deposit page with QR codes
+  - path: /withdraw
+    file: src/app/(user)/withdraw/page.tsx
     auth_required: true
-    description: Admin Users Management page
-  - path: /ctrl-sm-2026/tasks
-    file: src/app/ctrl-sm-2026/tasks/page.tsx
+    description: Withdrawal request page
+  - path: /wallet
+    file: src/app/(user)/wallet/page.tsx
     auth_required: true
-    description: Admin Tasks Management page
+    description: User wallet management
+  - path: /levels
+    file: src/app/(user)/levels/page.tsx
+    auth_required: true
+    description: VIP level information and upgrade paths
+  - path: /salary
+    file: src/app/(user)/salary/page.tsx
+    auth_required: true
+    description: Daily salary bonus tracking
+  - path: /invite
+    file: src/app/(user)/invite/page.tsx
+    auth_required: true
+    description: Referral system with invite codes
+  - path: /profile
+    file: src/app/(user)/profile/page.tsx
+    auth_required: true
+    description: User profile management hub
+  - path: /profile/wallet
+    file: src/app/(user)/profile/wallet/page.tsx
+    auth_required: true
+    description: Wallet address settings
+  - path: /profile/security
+    file: src/app/(user)/profile/security/page.tsx
+    auth_required: true
+    description: Security settings (password, 2FA)
+  - path: /record
+    file: src/app/(user)/record/page.tsx
+    auth_required: true
+    description: Transaction history
+  - path: /record/deposit
+    file: src/app/(user)/record/deposit/page.tsx
+    auth_required: true
+    description: Deposit history
+  - path: /record/withdraw
+    file: src/app/(user)/record/withdraw/page.tsx
+    auth_required: true
+    description: Withdrawal history
+
+  # Admin Routes (Protected + Admin Role)
+  - path: /dashboard-alpha
+    file: src/app/dashboard-alpha/page.tsx
+    auth_required: true
+    admin_required: true
+    description: Admin dashboard overview
+  - path: /dashboard-alpha/users
+    file: src/app/dashboard-alpha/users/page.tsx
+    auth_required: true
+    admin_required: true
+    description: User management
+  - path: /dashboard-alpha/deposits
+    file: src/app/dashboard-alpha/deposits/page.tsx
+    auth_required: true
+    admin_required: true
+    description: Deposit approval management
+  - path: /dashboard-alpha/withdrawals
+    file: src/app/dashboard-alpha/withdrawals/page.tsx
+    auth_required: true
+    admin_required: true
+    description: Withdrawal approval management
+  - path: /dashboard-alpha/tasks
+    file: src/app/dashboard-alpha/tasks/page.tsx
+    auth_required: true
+    admin_required: true
+    description: Task/product management
+  - path: /dashboard-alpha/bundles
+    file: src/app/dashboard-alpha/bundles/page.tsx
+    auth_required: true
+    admin_required: true
+    description: Bundle package management
+
 features:
-  - name: Admin Bundles Management
-    description: Manage bundle packages, allocate bundles to users, and filter products by VIP level.
+  - name: Authentication System
+    description: User registration, login, logout with Supabase Auth
     files:
-      - src/app/ctrl-sm-2026/bundles/page.tsx
-    entry_route: /ctrl-sm-2026/bundles
+      - src/app/login/page.tsx
+      - src/app/signup/page.tsx
+      - src/context/AuthContext.tsx
+      - src/lib/supabase.ts
+    entry_route: /login
     user_interactions:
-      - Select a user from the dropdown list
-      - Filter products by VIP level
-      - Add bundle price and commission value
-      - Click 'Deploy Bundle to Task' button
+      - Enter email and password
+      - Click login/signup button
+      - View error messages for invalid credentials
+      - Redirect to home on success
+    api_calls:
+      - method: POST
+        endpoint: supabase.auth.signInWithPassword
+      - method: POST
+        endpoint: supabase.auth.signUp
+
+  - name: Landing Page
+    description: Marketing landing page with video-like background and app preview
+    files:
+      - src/app/page.tsx
+    entry_route: /
+    user_interactions:
+      - Scroll through sections
+      - Click Get Started button
+      - Click Login button
+      - View VIP level information
+      - Read testimonials
+
+  - name: User Dashboard
+    description: Main user interface showing balance and task progress
+    files:
+      - src/app/(user)/home/page.tsx
+    entry_route: /home
+    user_interactions:
+      - View current balance
+      - Check task completion progress
+      - Navigate to deposit/withdraw
+      - Start tasks
+    api_calls:
+      - method: GET
+        endpoint: supabase/profiles
+      - method: GET
+        endpoint: supabase/transactions
+
+  - name: Deposit System
+    description: Cryptocurrency deposit with wallet addresses and QR codes
+    files:
+      - src/app/(user)/deposit/page.tsx
+    entry_route: /deposit
+    user_interactions:
+      - Select cryptocurrency type (USDT, ETH, BTC)
+      - Enter deposit amount
+      - Copy wallet address
+      - Scan QR code
+    api_calls:
+      - method: POST
+        endpoint: supabase/deposits
+
+  - name: Withdrawal System
+    description: Request withdrawals to user crypto wallets
+    files:
+      - src/app/(user)/withdraw/page.tsx
+    entry_route: /withdraw
+    user_interactions:
+      - Enter withdrawal amount
+      - Confirm wallet address
+      - Submit withdrawal request
+    api_calls:
+      - method: POST
+        endpoint: supabase/withdrawals
+
+  - name: VIP Level System
+    description: Tiered commission structure with 6 VIP levels
+    files:
+      - src/app/(user)/levels/page.tsx
+    entry_route: /levels
+    user_interactions:
+      - View current level
+      - See upgrade requirements
+      - Compare commission rates
+
+  - name: Task Completion
+    description: Complete task sets to earn commissions
+    files:
+      - src/app/(user)/start/page.tsx
+    entry_route: /start
+    user_interactions:
+      - View available tasks
+      - Complete task sets
+      - See earnings credited
     api_calls:
       - method: GET
         endpoint: supabase/bundle_packages
-      - method: GET
-        endpoint: supabase/profiles
-  - name: Admin Task Product Management
-    description: Manage product catalog for tasks with varying VIP levels and premium images.
+      - method: POST
+        endpoint: supabase/task_completions
+
+  - name: Admin Dashboard
+    description: Administrative controls for user and transaction management
     files:
-      - src/app/ctrl-sm-2026/tasks/page.tsx
-    entry_route: /ctrl-sm-2026/tasks
+      - src/app/dashboard-alpha/page.tsx
+      - src/app/dashboard-alpha/users/page.tsx
+      - src/app/dashboard-alpha/deposits/page.tsx
+      - src/app/dashboard-alpha/withdrawals/page.tsx
+    entry_route: /dashboard-alpha
     user_interactions:
-      - View list of products
-      - Add new product with image URL
-      - Edit existing product details
-      - Delete a product map
+      - View user list
+      - Approve/reject deposits
+      - Process withdrawals
+      - Manage VIP levels
     api_calls:
       - method: GET
-        endpoint: supabase/task_items
-      - method: POST
-        endpoint: supabase/task_items
+        endpoint: supabase/profiles
+      - method: PATCH
+        endpoint: supabase/deposits
+      - method: PATCH
+        endpoint: supabase/withdrawals
+
 auth_required: true
-known_limitations: []
+known_limitations:
+  - Test credentials must be created in Supabase before running auth tests
+  - Crypto deposit tests require mock wallet addresses
+  - Admin tests require admin role assignment
