@@ -57,7 +57,67 @@ export default function LandingPage() {
                 stagger: 0.1
             }, "-=0.8");
 
-            // Floating animations for background blobs
+            // Generative Neural Mesh Logic
+            const canvas = document.getElementById('neural-mesh') as HTMLCanvasElement;
+            if (canvas) {
+                const ctx2d = canvas.getContext('2d');
+                if (ctx2d) {
+                    let w = canvas.width = window.innerWidth;
+                    let h = canvas.height = window.innerHeight;
+                    const particles: any[] = [];
+                    const particleCount = 60;
+
+                    for (let i = 0; i < particleCount; i++) {
+                        particles.push({
+                            x: Math.random() * w,
+                            y: Math.random() * h,
+                            vx: (Math.random() - 0.5) * 0.4,
+                            vy: (Math.random() - 0.5) * 0.4,
+                            size: Math.random() * 2 + 1
+                        });
+                    }
+
+                    function animateMesh() {
+                        if (!ctx2d) return;
+                        ctx2d.clearRect(0, 0, w, h);
+                        ctx2d.strokeStyle = 'rgba(157, 80, 187, 0.15)';
+                        ctx2d.fillStyle = 'rgba(157, 80, 187, 0.4)';
+
+                        particles.forEach((p, i) => {
+                            p.x += p.vx;
+                            p.y += p.vy;
+
+                            if (p.x < 0 || p.x > w) p.vx *= -1;
+                            if (p.y < 0 || p.y > h) p.vy *= -1;
+
+                            ctx2d.beginPath();
+                            ctx2d.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx2d.fill();
+
+                            for (let j = i + 1; j < particles.length; j++) {
+                                const p2 = particles[j];
+                                const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                                if (dist < 150) {
+                                    ctx2d.lineWidth = 1 - dist / 150;
+                                    ctx2d.beginPath();
+                                    ctx2d.moveTo(p.x, p.y);
+                                    ctx2d.lineTo(p2.x, p2.y);
+                                    ctx2d.stroke();
+                                }
+                            }
+                        });
+                        requestAnimationFrame(animateMesh);
+                    }
+                    animateMesh();
+
+                    window.addEventListener('resize', () => {
+                        w = canvas.width = window.innerWidth;
+                        h = canvas.height = window.innerHeight;
+                    });
+                }
+            }
+
+            // Floating animations for background blobs... (rest of the code)
             gsap.to('.blob-1', {
                 x: 100,
                 y: 50,
@@ -93,20 +153,20 @@ export default function LandingPage() {
         <AnimatePage>
             <div ref={containerRef} className="min-h-screen bg-[#050510] text-white selection:bg-primary/30 selection:text-primary-light overflow-x-hidden">
                 {/* Background Atmosphere */}
-                <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                    <video 
-                        autoPlay 
-                        loop 
-                        muted 
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen"
-                    >
-                        <source src="/banner-video.mp4" type="video/mp4" />
-                    </video>
+                <div className="fixed inset-0 pointer-events-none overflow-hidden bg-[#050510]">
+                    {/* Premium Image Base */}
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 scale-110 animate-pulse-slow"
+                        style={{ backgroundImage: "url('/premium_background.png')" }}
+                    />
+                    
+                    {/* Generative Neural Mesh Canvas */}
+                    <canvas id="neural-mesh" className="absolute inset-0 w-full h-full opacity-30 mix-blend-screen" />
+
                     <div className="blob-1 absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]" />
                     <div className="blob-2 absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-accent/10 rounded-full blur-[140px]" />
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050510]/50 to-[#050510]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050510]/60 to-[#050510]" />
                 </div>
 
                 {/* Navigation */}
