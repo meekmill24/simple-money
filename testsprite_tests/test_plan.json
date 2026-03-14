@@ -1,0 +1,261 @@
+[
+  {
+    "id": "TC001",
+    "title": "Landing Page - Hero Section Renders",
+    "description": "Verify the landing page hero section displays correctly with animated background",
+    "category": "ui-ux",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Navigate to the landing page (/)"},
+      {"type": "assertion", "description": "Verify hero headline 'Earn Daily Commissions' is visible"},
+      {"type": "assertion", "description": "Verify 'Get Started' CTA button is visible"},
+      {"type": "assertion", "description": "Verify animated gradient background renders"},
+      {"type": "assertion", "description": "Verify phone mockup preview is visible"}
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Landing Page - Navigation Links Work",
+    "description": "Verify all navigation links on landing page work correctly",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Navigate to the landing page (/)"},
+      {"type": "action", "description": "Click 'Login' button in header"},
+      {"type": "assertion", "description": "Verify redirect to /login page"},
+      {"type": "action", "description": "Navigate back to landing page"},
+      {"type": "action", "description": "Click 'Get Started' button"},
+      {"type": "assertion", "description": "Verify redirect to /signup page"}
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Landing Page - VIP Levels Section",
+    "description": "Verify VIP levels information displays correctly",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {"type": "action", "description": "Navigate to the landing page (/)"},
+      {"type": "action", "description": "Scroll to VIP Levels section"},
+      {"type": "assertion", "description": "Verify 6 VIP level cards are visible"},
+      {"type": "assertion", "description": "Verify commission rates are displayed (0.45% to 1.5%)"},
+      {"type": "assertion", "description": "Verify minimum deposit amounts are shown"}
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Login - Success with Valid Credentials",
+    "description": "Verify user can login successfully with valid credentials",
+    "category": "functional",
+    "priority": "Critical",
+    "steps": [
+      {"type": "action", "description": "Navigate to login page (/login)"},
+      {"type": "action", "description": "Enter valid test email"},
+      {"type": "action", "description": "Enter valid test password"},
+      {"type": "action", "description": "Click login button"},
+      {"type": "assertion", "description": "Verify redirect to /home dashboard"},
+      {"type": "assertion", "description": "Verify user balance is displayed"}
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Login - Failure with Invalid Credentials",
+    "description": "Verify appropriate error message for invalid login",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Navigate to login page (/login)"},
+      {"type": "action", "description": "Enter invalid email"},
+      {"type": "action", "description": "Enter invalid password"},
+      {"type": "action", "description": "Click login button"},
+      {"type": "assertion", "description": "Verify error message is displayed"},
+      {"type": "assertion", "description": "Verify user remains on login page"}
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Login - Redirect Logged In User",
+    "description": "Verify logged in user is redirected from login page",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {"type": "action", "description": "Login with valid credentials"},
+      {"type": "action", "description": "Navigate directly to /login"},
+      {"type": "assertion", "description": "Verify automatic redirect to /home"}
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Signup - New User Registration",
+    "description": "Verify new user can register successfully",
+    "category": "functional",
+    "priority": "Critical",
+    "steps": [
+      {"type": "action", "description": "Navigate to signup page (/signup)"},
+      {"type": "action", "description": "Enter new email address"},
+      {"type": "action", "description": "Enter password"},
+      {"type": "action", "description": "Confirm password"},
+      {"type": "action", "description": "Enter referral code (optional)"},
+      {"type": "action", "description": "Click signup button"},
+      {"type": "assertion", "description": "Verify success message or redirect"}
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Dashboard - Balance Display",
+    "description": "Verify user dashboard displays balance correctly",
+    "category": "functional",
+    "priority": "Critical",
+    "steps": [
+      {"type": "action", "description": "Login with valid credentials"},
+      {"type": "action", "description": "Navigate to /home"},
+      {"type": "assertion", "description": "Verify balance amount is displayed"},
+      {"type": "assertion", "description": "Verify VIP level indicator is shown"},
+      {"type": "assertion", "description": "Verify task progress is visible"}
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Dashboard - Quick Actions",
+    "description": "Verify dashboard quick action buttons work",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Login and navigate to /home"},
+      {"type": "action", "description": "Click Deposit button"},
+      {"type": "assertion", "description": "Verify redirect to /deposit"},
+      {"type": "action", "description": "Navigate back to /home"},
+      {"type": "action", "description": "Click Withdraw button"},
+      {"type": "assertion", "description": "Verify redirect to /withdraw"}
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Deposit - Page Loads Correctly",
+    "description": "Verify deposit page displays cryptocurrency options",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Login and navigate to /deposit"},
+      {"type": "assertion", "description": "Verify cryptocurrency selection options (USDT, ETH, BTC)"},
+      {"type": "assertion", "description": "Verify deposit amount input field"},
+      {"type": "assertion", "description": "Verify wallet address display area"}
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Deposit - QR Code Generation",
+    "description": "Verify QR code generates for deposit address",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {"type": "action", "description": "Login and navigate to /deposit"},
+      {"type": "action", "description": "Select USDT as cryptocurrency"},
+      {"type": "action", "description": "Enter deposit amount"},
+      {"type": "assertion", "description": "Verify QR code is generated"},
+      {"type": "assertion", "description": "Verify wallet address is displayed"}
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "VIP Levels - Information Display",
+    "description": "Verify VIP levels page shows all tier information",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {"type": "action", "description": "Login and navigate to /levels"},
+      {"type": "assertion", "description": "Verify current VIP level is highlighted"},
+      {"type": "assertion", "description": "Verify 6 VIP tiers are displayed"},
+      {"type": "assertion", "description": "Verify commission rates per tier"},
+      {"type": "assertion", "description": "Verify minimum deposit requirements"}
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Profile - Navigation",
+    "description": "Verify profile page navigation works correctly",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {"type": "action", "description": "Login and navigate to /profile"},
+      {"type": "assertion", "description": "Verify profile menu items are visible"},
+      {"type": "action", "description": "Click on Wallet settings"},
+      {"type": "assertion", "description": "Verify redirect to /profile/wallet"},
+      {"type": "action", "description": "Click on Security settings"},
+      {"type": "assertion", "description": "Verify redirect to /profile/security"}
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Mobile Responsiveness - Landing Page",
+    "description": "Verify landing page is responsive on mobile viewport",
+    "category": "ui-ux",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Set viewport to mobile (375x812)"},
+      {"type": "action", "description": "Navigate to landing page (/)"},
+      {"type": "assertion", "description": "Verify mobile hamburger menu is visible"},
+      {"type": "assertion", "description": "Verify hero section fits viewport"},
+      {"type": "assertion", "description": "Verify no horizontal scroll"}
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Mobile Responsiveness - Dashboard",
+    "description": "Verify dashboard is responsive on mobile viewport",
+    "category": "ui-ux",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Set viewport to mobile (375x812)"},
+      {"type": "action", "description": "Login and navigate to /home"},
+      {"type": "assertion", "description": "Verify balance card is visible"},
+      {"type": "assertion", "description": "Verify navigation is accessible"},
+      {"type": "assertion", "description": "Verify all content is readable"}
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Protected Routes - Unauthenticated Access",
+    "description": "Verify protected routes redirect unauthenticated users",
+    "category": "security",
+    "priority": "Critical",
+    "steps": [
+      {"type": "action", "description": "Clear all session data"},
+      {"type": "action", "description": "Navigate directly to /home"},
+      {"type": "assertion", "description": "Verify redirect to /login"},
+      {"type": "action", "description": "Navigate directly to /deposit"},
+      {"type": "assertion", "description": "Verify redirect to /login"},
+      {"type": "action", "description": "Navigate directly to /dashboard-alpha"},
+      {"type": "assertion", "description": "Verify redirect to /login or access denied"}
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Session Persistence",
+    "description": "Verify user session persists after page refresh",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Login with valid credentials"},
+      {"type": "assertion", "description": "Verify on /home dashboard"},
+      {"type": "action", "description": "Refresh the page"},
+      {"type": "assertion", "description": "Verify still logged in on /home"},
+      {"type": "assertion", "description": "Verify balance is still visible"}
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Logout Functionality",
+    "description": "Verify user can logout successfully",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {"type": "action", "description": "Login with valid credentials"},
+      {"type": "action", "description": "Navigate to profile or settings"},
+      {"type": "action", "description": "Click logout button"},
+      {"type": "assertion", "description": "Verify redirect to login or landing page"},
+      {"type": "action", "description": "Try to access /home"},
+      {"type": "assertion", "description": "Verify redirect to login (session cleared)"}
+    ]
+  }
+]
