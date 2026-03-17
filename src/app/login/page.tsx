@@ -129,7 +129,7 @@ export default function LoginPage() {
                 }
 
                 const isAdmin = profileData?.role === 'admin';
-                router.push(isAdmin ? '/dashboard-alpha' : '/home');
+                router.push(isAdmin ? '/admin' : '/home');
                 router.refresh();
             }
         } catch (err: any) {

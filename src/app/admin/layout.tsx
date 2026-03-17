@@ -27,17 +27,17 @@ import {
 import AnimatePage from '@/components/AnimatePage';
 
 const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard-alpha' },
-    { icon: Users, label: 'Users', href: '/dashboard-alpha/users' },
-    { icon: ArrowDownToLine, label: 'Deposits', href: '/dashboard-alpha/deposits' },
-    { icon: ArrowUpFromLine, label: 'Withdrawals', href: '/dashboard-alpha/withdrawals' },
-    { icon: Package, label: 'Bundles', href: '/dashboard-alpha/bundles' },
-    { icon: Bell, label: 'Notify Users', href: '/dashboard-alpha/notify' },
-    { icon: Layers, label: 'Levels', href: '/dashboard-alpha/levels' },
-    { icon: Grid3X3, label: 'Task Items', href: '/dashboard-alpha/tasks' },
-    { icon: Share2, label: 'Referrals', href: '/dashboard-alpha/referrals' },
-    { icon: Receipt, label: 'Transactions', href: '/dashboard-alpha/transactions' },
-    { icon: Settings, label: 'Settings', href: '/dashboard-alpha/settings' },
+    { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
+    { icon: Users, label: 'Users', href: '/users' },
+    { icon: ArrowDownToLine, label: 'Deposits', href: '/deposits' },
+    { icon: ArrowUpFromLine, label: 'Withdrawals', href: '/withdrawals' },
+    { icon: Package, label: 'Bundles', href: '/bundles' },
+    { icon: Bell, label: 'Notify Users', href: '/notify' },
+    { icon: Layers, label: 'Levels', href: '/levels' },
+    { icon: Grid3X3, label: 'Task Items', href: '/tasks' },
+    { icon: Share2, label: 'Referrals', href: '/referrals' },
+    { icon: Receipt, label: 'Transactions', href: '/transactions' },
+    { icon: Settings, label: 'Settings', href: '/settings' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -88,13 +88,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         if (!loading) {
-            const isAdmin = profile?.role === 'admin';
-            if (!user || !profile || !isAdmin) {
-                console.warn('Unauthorized access attempt to admin panel');
-                router.replace(user ? '/home' : '/login');
+            // Check if user is already on the login page
+            if (pathname === '/admin/login' || pathname === '/login') {
+                // If they are already authenticated as an admin, redirect them out of the login page
+                if (user && profile?.role === 'admin') {
+                    router.replace('/');
+                }
+                // Otherwise, stay on the login page safely (no redirect loop)
+                return;
+            }
+
+            // Normal protection for /admin/* pages:
+            if (!user) {
+                router.replace('/login');
+            } else if (profile && profile.role !== 'admin') {
+                // Not an admin
+                router.replace('/login');
             }
         }
-    }, [user, profile, loading, router]);
+    }, [user, profile, loading, router, pathname]);
+
+    // Do not render layout shell on the login page
+    if (pathname === '/admin/login' || pathname === '/login') {
+        return <>{children}</>;
+    }
 
     if (loading) {
         return (

@@ -8,7 +8,7 @@
           "value": "admin.simplemoneys.com"
         }
       ],
-      "destination": "/dashboard-alpha/:path*"
+      "destination": "/admin/:path*"
     }
   ]
 }
