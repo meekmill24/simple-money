@@ -12,7 +12,8 @@ import {
     Plus, 
     X,
     Loader2,
-    CheckCircle2
+    CheckCircle2,
+    QrCode
 } from 'lucide-react';
 
 interface SiteSetting {
@@ -93,6 +94,7 @@ export default function AdminSettingsPage() {
     const currencySettings = settings.find(s => s.key === 'currency')?.value || {};
     const languages = settings.find(s => s.key === 'languages')?.value || [];
     const themeColors = settings.find(s => s.key === 'theme_colors')?.value || {};
+    const walletAddresses = settings.find(s => s.key === 'wallet_addresses')?.value || {};
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -229,6 +231,39 @@ export default function AdminSettingsPage() {
                     <div className="pt-4 flex items-center gap-2 p-4 bg-primary/5 rounded-2xl border border-primary/10">
                         <Loader2 size={16} className="text-primary-light animate-pulse" />
                         <p className="text-xs text-text-secondary">Changes to theme colors apply instantly to your current view upon saving.</p>
+                    </div>
+                </div>
+
+                {/* Wallet Addresses Section */}
+                <div className="glass-card-strong p-8 space-y-6 lg:col-span-2">
+                    <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+                        <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400">
+                             <QrCode className="w-5 h-5" />
+                        </div>
+                        <h2 className="text-xl font-bold text-white tracking-tight">Deposit Wallet Addresses</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[
+                            { key: 'trx', label: 'USDT (TRC20)', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                            { key: 'bep20', label: 'USDT (BEP20)', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png' },
+                            { key: 'erc20', label: 'USDT (ERC20) / ETH', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png' },
+                            { key: 'btc', label: 'Bitcoin (BTC)', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png' }
+                        ].map((net) => (
+                            <div key={net.key} className="space-y-3">
+                                <div className="flex items-center gap-2">
+                                    <img src={net.icon} alt="" className="w-4 h-4" />
+                                    <label className="text-xs font-black uppercase tracking-widest text-text-secondary opacity-70">{net.label}</label>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    value={walletAddresses[net.key] || ''}
+                                    onChange={(e) => handleUpdateValue('wallet_addresses', { ...walletAddresses, [net.key]: e.target.value })}
+                                    className="input-field w-full font-mono text-xs"
+                                    placeholder={`Enter ${net.label} address`}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
