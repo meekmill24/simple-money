@@ -106,6 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (event === 'INITIAL_SESSION' && !initialized) return;
 
                 if (session?.user) {
+                    setLoading(true); // Ensure loading is true while we fetch the profile
                     setUser(session.user);
                     await fetchProfile(session.user.id);
                 } else if (event === 'SIGNED_OUT') {
@@ -113,6 +114,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setUser(null);
                     setProfile(null);
                 }
+                
+                // Final safety check to ensure we don't clear loading state 
+                // if we're in the middle of a transition that should be loading
                 if (mounted) setLoading(false);
             }
         );

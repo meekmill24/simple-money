@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "admin.simplemoneys.com"
+        }
+      ],
+      "destination": "/admin/:path*"
+    }
+  ]
+}
