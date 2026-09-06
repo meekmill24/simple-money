@@ -105,23 +105,22 @@ function OldSignupPage() {
         setLoading(true);
 
         try {
-            // Mandatory Referral Code Validation
+            // Mandatory Referral Code Validation (via server API to bypass RLS)
             if (!formData.referralCode || formData.referralCode.trim() === '') {
                 throw new Error('A valid referral code is mandatory during sign up.');
             }
 
-            if (formData.referralCode.toUpperCase() !== 'VIP1') {
-                const { data: refData } = await supabase
-                    .from('referral_codes')
-                    .select('*')
-                    .eq('code', formData.referralCode)
-                    .eq('is_active', true)
-                    .single();
-
-                if (!refData) {
-                    throw new Error('Invalid referral code');
-                }
+            const refRes = await fetch('/api/auth/validate-referral', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ referralCode: formData.referralCode.trim() }),
+            });
+            const refJson = await refRes.json();
+            if (!refRes.ok || !refJson.valid) {
+                throw new Error(refJson.error || 'Invalid referral code. Please check and try again.');
             }
+            // Use the canonicalized code returned by the server
+            const canonicalCode = refJson.code as string;
 
             const rawPhone = formData.phone.replace(/[\s\-().]/g, '');
             const fullPhone = (signupMode === 'magic' || formData.phone.startsWith('+')) ? formData.phone : `${countryCode.dial_code}${rawPhone}`;
@@ -130,7 +129,7 @@ function OldSignupPage() {
                 data: {
                     username: formData.username,
                     phone: signupMode === 'magic' ? null : fullPhone,
-                    referred_by: formData.referralCode.trim(),
+                    referred_by: canonicalCode,
                     is_first_user: formData.email === 'amoafop08@gmail.com',
                 },
             };
@@ -140,7 +139,7 @@ function OldSignupPage() {
                 const { error: magicError } = await supabase.auth.signInWithOtp({
                     email: formData.email,
                     options: {
-                        emailRedirectTo: `${window.location.origin}/home`,
+                        emailRedirectTo: `${window.location.origin}/email-confirmed`,
                         data: signUpOptions.data,
                         shouldCreateUser: true
                     }
@@ -153,7 +152,10 @@ function OldSignupPage() {
             const { data, error: signUpError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
-                options: signUpOptions,
+                options: {
+                    ...signUpOptions,
+                    emailRedirectTo: `${window.location.origin}/email-confirmed`,
+                },
             });
 
             if (signUpError) throw signUpError;
@@ -162,9 +164,8 @@ function OldSignupPage() {
                 if (data.session) {
                     router.push('/home');
                 } else {
-                    setError('');
-                    alert('Account created! Please check your email to confirm, then log in.');
-                    router.push('/login');
+                    // Redirect to a proper email-verification confirmation page
+                    router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
                 }
             }
         } catch (err: unknown) {

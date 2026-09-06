@@ -60,9 +60,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                     .from('site_settings')
                     .select('key, value');
 
-                if (error) throw error;
+                if (error) {
+                    console.warn('Site settings table may be missing or inaccessible. Using defaults.', error.message);
+                    setSettings(prev => ({ ...prev, loading: false }));
+                    return;
+                }
 
-                if (data) {
+                if (data && data.length > 0) {
                     const newSettings: any = { ...settings, loading: false };
                     data.forEach(item => {
                         newSettings[item.key] = item.value;
@@ -74,9 +78,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                     if (newSettings.theme_colors) {
                         applyThemeColors(newSettings.theme_colors);
                     }
+                } else {
+                    // No data found, but no error (might be empty table)
+                    setSettings(prev => ({ ...prev, loading: false }));
                 }
             } catch (err) {
-                console.error('Error fetching site settings:', err);
+                console.error('Unexpected error fetching site settings:', err);
                 setSettings(prev => ({ ...prev, loading: false }));
             }
         }

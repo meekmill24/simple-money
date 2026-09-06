@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { 
@@ -35,10 +35,29 @@ export default function DepositPage() {
     const [proofFile, setProofFile] = useState<File | null>(null);
     const [proofPreview, setProofPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [walletAddresses, setWalletAddresses] = useState<Record<string, string>>({
+        trx: 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8',
+        bep20: 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8',
+        erc20: 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8',
+        btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'
+    });
 
-    const depositAddress = network === 'BTC' 
-        ? '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa' // Example BTC Genesis address as placeholder
-        : 'TRx9mK2pQbN7cVh3dJwXeGfLkAoYsUP5rI8';
+    useEffect(() => {
+        const fetchWalletAddresses = async () => {
+            const { data, error } = await supabase
+                .from('site_settings')
+                .select('value')
+                .eq('key', 'wallet_addresses')
+                .single();
+            
+            if (!error && data?.value) {
+                setWalletAddresses(data.value);
+            }
+        };
+        fetchWalletAddresses();
+    }, []);
+
+    const depositAddress = walletAddresses[network.toLowerCase()] || '';
 
     const finalAmount = customAmount || amount;
 

@@ -118,7 +118,7 @@ export default function AdminDashboard() {
             {(stats.pendingDeposits > 0 || stats.pendingWithdrawals > 0) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-slide-up">
                     {stats.pendingDeposits > 0 && (
-                        <Link href="/dashboard-alpha/deposits" className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-amber-500/15 to-transparent border border-amber-500/30 hover:border-amber-500/60 transition-colors group">
+                        <Link href="/admin/deposits" className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-amber-500/15 to-transparent border border-amber-500/30 hover:border-amber-500/60 transition-colors group">
                             <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-500 group-hover:scale-110 transition-transform"><ArrowDownToLine size={24} /></div>
                             <div>
                                 <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Pending Deposits</p>
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                         </Link>
                     )}
                     {stats.pendingWithdrawals > 0 && (
-                        <Link href="/dashboard-alpha/withdrawals" className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-danger/15 to-transparent border border-danger/30 hover:border-danger/60 transition-colors group">
+                        <Link href="/admin/withdrawals" className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-danger/15 to-transparent border border-danger/30 hover:border-danger/60 transition-colors group">
                             <div className="w-12 h-12 rounded-xl bg-danger/20 flex items-center justify-center">
                                 <ArrowUpFromLine size={22} className="text-danger" />
                             </div>
@@ -165,11 +165,11 @@ export default function AdminDashboard() {
                 <p className="text-xs font-black text-text-secondary/60 uppercase tracking-[0.2em] mb-3">Platform Stats</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {[
-                        { label: 'Users', value: stats.totalUsers, icon: Users, color: 'from-blue-500/30', iconBg: 'bg-blue-500/20', iconColor: 'text-blue-400', href: '/dashboard-alpha/users' },
-                        { label: 'Levels', value: stats.totalLevels, icon: Layers, color: 'from-purple-500/30', iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400', href: '/dashboard-alpha/levels' },
-                        { label: 'Task Items', value: stats.totalTasks, icon: Grid3X3, color: 'from-cyan-500/30', iconBg: 'bg-cyan-500/20', iconColor: 'text-cyan-400', href: '/dashboard-alpha/tasks' },
-                        { label: 'Referrals', value: stats.totalReferrals, icon: Share2, color: 'from-amber-500/30', iconBg: 'bg-amber-500/20', iconColor: 'text-amber-400', href: '/dashboard-alpha/referrals' },
-                        { label: 'Bundles', value: stats.totalBundles, icon: Package, color: 'from-fuchsia-500/30', iconBg: 'bg-fuchsia-500/20', iconColor: 'text-fuchsia-400', href: '/dashboard-alpha/bundles' },
+                        { label: 'Users', value: stats.totalUsers, icon: Users, color: 'from-blue-500/30', iconBg: 'bg-blue-500/20', iconColor: 'text-blue-400', href: '/admin/users' },
+                        { label: 'Levels', value: stats.totalLevels, icon: Layers, color: 'from-purple-500/30', iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400', href: '/admin/levels' },
+                        { label: 'Task Items', value: stats.totalTasks, icon: Grid3X3, color: 'from-cyan-500/30', iconBg: 'bg-cyan-500/20', iconColor: 'text-cyan-400', href: '/admin/tasks' },
+                        { label: 'Referrals', value: stats.totalReferrals, icon: Share2, color: 'from-amber-500/30', iconBg: 'bg-amber-500/20', iconColor: 'text-amber-400', href: '/admin/referrals' },
+                        { label: 'Bundles', value: stats.totalBundles, icon: Package, color: 'from-fuchsia-500/30', iconBg: 'bg-fuchsia-500/20', iconColor: 'text-fuchsia-400', href: '/admin/bundles' },
                     ].map(({ label, value, icon: Icon, color, iconBg, iconColor, href }) => (
                         <Link key={label} href={href}
                             className={`glass-card p-5 bg-gradient-to-br ${color} to-transparent animate-slide-up hover:scale-105 transition-transform duration-300 border border-white/10 group`}>
@@ -219,12 +219,12 @@ export default function AdminDashboard() {
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
                         {[
-                            { label: 'Review Deposits', href: '/dashboard-alpha/deposits', icon: ArrowDownToLine, color: 'text-success', bg: 'bg-success/10 hover:bg-success/20 border-success/20' },
-                            { label: 'Review Withdrawals', href: '/dashboard-alpha/withdrawals', icon: ArrowUpFromLine, color: 'text-danger', bg: 'bg-danger/10 hover:bg-danger/20 border-danger/20' },
-                            { label: 'Manage Bundles', href: '/dashboard-alpha/bundles', icon: Package, color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border-fuchsia-500/20' },
-                            { label: 'Send Notification', href: '/dashboard-alpha/notify', icon: Bell, color: 'text-amber-400', bg: 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/20' },
-                            { label: 'Manage Users', href: '/dashboard-alpha/users', icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20' },
-                            { label: 'Transactions', href: '/dashboard-alpha/transactions', icon: DollarSign, color: 'text-primary-light', bg: 'bg-primary/10 hover:bg-primary/20 border-primary/20' },
+                            { label: 'Review Deposits', href: '/admin/deposits', icon: ArrowDownToLine, color: 'text-success', bg: 'bg-success/10 hover:bg-success/20 border-success/20' },
+                            { label: 'Review Withdrawals', href: '/admin/withdrawals', icon: ArrowUpFromLine, color: 'text-danger', bg: 'bg-danger/10 hover:bg-danger/20 border-danger/20' },
+                            { label: 'Manage Bundles', href: '/admin/bundles', icon: Package, color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border-fuchsia-500/20' },
+                            { label: 'Send Notification', href: '/admin/notify', icon: Bell, color: 'text-amber-400', bg: 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/20' },
+                            { label: 'Manage Users', href: '/admin/users', icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20' },
+                            { label: 'Transactions', href: '/admin/transactions', icon: DollarSign, color: 'text-primary-light', bg: 'bg-primary/10 hover:bg-primary/20 border-primary/20' },
                         ].map(({ label, href, icon: Icon, color, bg }) => (
                             <Link key={label} href={href} className={`flex items-center gap-2.5 p-3.5 rounded-xl border transition-colors ${bg}`}>
                                 <Icon size={16} className={color} />

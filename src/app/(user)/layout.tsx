@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import ActivityFeed from '@/components/ActivityFeed';
 import { useState, useRef, useEffect } from 'react';
 import AnimatePage from '@/components/AnimatePage';
+import EmailVerificationBanner from '@/components/EmailVerificationBanner';
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
@@ -48,6 +49,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
                 <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
                 <div className="flex-1 md:pl-72 h-screen flex flex-col relative bg-transparent overflow-hidden">
+                    <EmailVerificationBanner />
                     <Header onMenuClick={() => setSidebarOpen(true)} />
                     <main id="main-content" ref={mainRef} className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar relative z-10 pb-20 px-4 md:px-8">
                         <div className="max-w-7xl mx-auto relative pt-4 md:pt-6">

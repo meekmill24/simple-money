@@ -731,87 +731,87 @@ export default function StartPage() {
                                     onClick={handleConfirmSettlement}
                                 >
                                     <div
-                                        className="glass-card-strong max-w-sm w-full p-10 animate-scale-in border-primary/30 rounded-[40px] relative shadow-[0_50px_160px_rgba(157,80,187,0.3)] cursor-default md:fixed md:left-[59%] md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 overflow-hidden"
+                                        className="glass-card-strong max-w-sm w-full p-6 md:p-8 animate-scale-in border-primary/30 rounded-[32px] md:rounded-[40px] relative shadow-[0_50px_160px_rgba(157,80,187,0.3)] cursor-default md:fixed md:left-[59%] md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 overflow-hidden"
                                         onClick={e => e.stopPropagation()}
                                     >
-                                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-primary-light to-transparent" />
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-light to-transparent" />
 
-                                        <div className="relative mb-10 scale-110">
-                                            <div className="w-24 h-24 rounded-[32px] bg-gradient-to-br from-primary via-accent to-primary-light flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(157,80,187,0.4)] animate-bounce-slow">
-                                                <Trophy size={48} className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+                                        <div className="relative mb-6">
+                                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[32px] bg-gradient-to-br from-primary via-accent to-primary-light flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(157,80,187,0.4)] animate-bounce-slow">
+                                                <Trophy size={32} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] md:w-10 md:h-10" />
                                             </div>
-                                            <div className="absolute -top-4 -right-4">
-                                                <Sparkles className="text-warning animate-pulse" size={28} />
+                                            <div className="absolute -top-2 -right-2">
+                                                <Sparkles className="text-warning animate-pulse" size={20} />
                                             </div>
-                                            <div className="absolute -bottom-4 -left-4">
-                                                <Star className="text-amber-400 animate-spin-slow" size={28} />
+                                            <div className="absolute -bottom-2 -left-2">
+                                                <Star className="text-amber-400 animate-spin-slow" size={20} />
                                             </div>
                                         </div>
 
-                                        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2 leading-tight drop-shadow-lg">
+                                        <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-1 leading-tight drop-shadow-lg">
                                             {isAllSetsDone ? "Day Complete" : "Set Finalized"}
                                         </h2>
 
-                                        <p className="text-[11px] font-black text-primary-light uppercase tracking-[0.4em] mb-10 opacity-80 flex items-center justify-center gap-2">
-                                            <Zap size={10} className="fill-primary-light" />
-                                            {isAllSetsDone ? "Maximum Efficiency Reached" : `Sequence ${currentSet} / ${setsPerDay} Success`}
-                                            <Zap size={10} className="fill-primary-light" />
+                                        <p className="text-[9px] md:text-[10px] font-black text-primary-light uppercase tracking-[0.3em] mb-6 opacity-80 flex items-center justify-center gap-1.5">
+                                            <Zap size={8} className="fill-primary-light" />
+                                            {isAllSetsDone ? "Maximum Efficiency" : `Sequence ${currentSet} / ${setsPerDay} Success`}
+                                            <Zap size={8} className="fill-primary-light" />
                                         </p>
 
-                                        <div className="space-y-4 mb-10 bg-black/40 rounded-3xl p-8 border border-white/5 shadow-inner">
-                                            <div className="flex flex-col gap-1 items-center pb-6 border-b border-white/5">
-                                                <span className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] opacity-40">Wallet Balance</span>
-                                                <span className="text-5xl font-black text-white tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                                        <div className="space-y-3 mb-6 bg-black/40 rounded-3xl p-5 md:p-6 border border-white/5 shadow-inner">
+                                            <div className="flex flex-col gap-0.5 items-center pb-4 border-b border-white/5">
+                                                <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.2em] opacity-40">Wallet Balance</span>
+                                                <span className="text-3xl md:text-4xl font-black text-white tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                                                     {format(profile?.wallet_balance || 0)}
                                                 </span>
                                             </div>
-                                            <div className="grid grid-cols-2 gap-6 pt-4">
+                                            <div className="grid grid-cols-2 gap-4 pt-3">
                                                 <div className="flex flex-col items-center">
-                                                    <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.2em] opacity-40 leading-none mb-3">Today's Profit</span>
-                                                    <div className="flex items-center gap-1.5">
-                                                        <TrendingUp size={12} className="text-success" />
-                                                        <span className="text-base font-black text-success tabular-nums leading-none">+{format(profile?.profit || 0)}</span>
+                                                    <span className="text-[8px] font-black text-text-secondary uppercase tracking-[0.15em] opacity-40 leading-none mb-2">Today's Profit</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <TrendingUp size={10} className="text-success" />
+                                                        <span className="text-sm font-black text-success tabular-nums leading-none">+{format(profile?.profit || 0)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-center border-l border-white/5">
-                                                    <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.2em] opacity-40 leading-none mb-3">Referral Earnings</span>
-                                                    <div className="flex items-center gap-1.5">
-                                                        <Sparkles size={12} className="text-primary-light" />
-                                                        <span className="text-base font-black text-primary-light tabular-nums leading-none">+{format(profile?.referral_earned || 0)}</span>
+                                                    <span className="text-[8px] font-black text-text-secondary uppercase tracking-[0.15em] opacity-40 leading-none mb-2">Referrals</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <Sparkles size={10} className="text-primary-light" />
+                                                        <span className="text-sm font-black text-primary-light tabular-nums leading-none">+{format(profile?.referral_earned || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <p className="text-[12px] font-bold text-text-secondary uppercase tracking-widest leading-relaxed mb-10 opacity-70 px-4">
+                                        <p className="text-[10px] md:text-[11px] font-bold text-text-secondary uppercase tracking-widest leading-relaxed mb-8 opacity-70 px-2">
                                             {isAllSetsDone
-                                                ? "You have reached the maximum daily threshold for your current level. Data matching protocols for the next cycle will resume tomorrow."
-                                                : "High-yield data batch successfully cleared for settlement. Please synchronize with customer support to initialize the next sequence."}
+                                                ? "Daily threshold reached. Protocols resume tomorrow."
+                                                : "Batch cleared for settlement. Synchronize with support to continue."}
                                         </p>
 
-                                        <div className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-3">
                                             {!isAllSetsDone ? (
                                                 <button
                                                     onClick={handleConfirmSettlement}
-                                                    className="relative w-full py-6 rounded-[28px] overflow-hidden group transition-all duration-300"
+                                                    className="relative w-full py-4 md:py-5 rounded-[24px] overflow-hidden group transition-all duration-300"
                                                 >
                                                     <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer" />
-                                                    <div className="relative z-10 flex items-center justify-center gap-3 text-white font-black uppercase tracking-[0.2em] text-[13px]">
-                                                        <MessageCircle size={22} className="group-hover:rotate-12 transition-transform" />
-                                                        Initialize Settlement
+                                                    <div className="relative z-10 flex items-center justify-center gap-2 text-white font-black uppercase tracking-[0.2em] text-[11px] md:text-[12px]">
+                                                        <MessageCircle size={18} className="group-hover:rotate-12 transition-transform md:w-5 md:h-5" />
+                                                        Portal
                                                     </div>
                                                     <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                                                 </button>
                                             ) : (
                                                 <Link
                                                     href="/home"
-                                                    className="w-full py-6 rounded-[28px] bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.2em] text-[13px] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                                                    className="w-full py-4 md:py-5 rounded-[24px] bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.2em] text-[11px] md:text-[12px] hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                                                 >
-                                                    Return to Terminal
+                                                    Return to Home
                                                 </Link>
                                             )}
                                             
-                                            <p className="text-[9px] font-black text-text-secondary/30 uppercase tracking-[0.4em]">SYSTEM PROTOCOL V4.2 ACTIVE</p>
+                                            <p className="text-[8px] font-black text-text-secondary/30 uppercase tracking-[0.3em] mt-1">SYSTEM PROTOCOL ACTIVE</p>
                                         </div>
                                     </div>
                                 </div>

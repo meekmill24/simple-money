@@ -39,6 +39,7 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [unverifiedEmail, setUnverifiedEmail] = useState('');
     // Forgot password
     const [mode, setMode] = useState<'login' | 'forgot'>('login');
     const [resetEmail, setResetEmail] = useState('');
@@ -106,7 +107,15 @@ export default function LoginPage() {
                 password,
             });
 
-            if (signInError) throw signInError;
+            if (signInError) {
+                // Supabase blocks login if email is not confirmed
+                if (signInError.message?.toLowerCase().includes('email not confirmed') ||
+                    signInError.message?.toLowerCase().includes('email_not_confirmed')) {
+                    setUnverifiedEmail(emailToUse);
+                    return;
+                }
+                throw signInError;
+            }
 
             if (signInData?.user) {
                 console.log('--- LOGIN SUCCESS ---');
@@ -129,10 +138,11 @@ export default function LoginPage() {
                 }
 
                 const isAdmin = profileData?.role === 'admin';
-                router.push(isAdmin ? '/dashboard-alpha' : '/home');
+                router.push(isAdmin ? '/admin' : '/home');
                 router.refresh();
             }
         } catch (err: any) {
+            setUnverifiedEmail('');
             setError(err.message.replace('Invalid login credentials', 'Incorrect identifier or password'));
         } finally {
             setLoading(false);
@@ -275,7 +285,36 @@ export default function LoginPage() {
                                             </div>
                                         </div>
                                     )}
-                                    {error && <div className="p-3 rounded-xl bg-danger/10 text-danger text-sm">{error}</div>}
+                                    {unverifiedEmail ? (
+                                        <div className="p-4 rounded-xl bg-warning/10 border border-warning/25 space-y-3">
+                                            <div className="flex items-start gap-3">
+                                                <span className="text-warning text-lg leading-none mt-0.5">✉️</span>
+                                                <div>
+                                                    <p className="text-sm font-bold text-warning">Email not verified yet</p>
+                                                    <p className="text-xs text-text-secondary mt-0.5">Check your inbox and click the confirmation link, then try logging in again.</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    type="button"
+                                                    id="goto-verify-email-btn"
+                                                    onClick={() => router.push(`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`)}
+                                                    className="flex-1 py-2 px-3 rounded-xl bg-primary text-white text-xs font-black hover:opacity-90 transition-opacity"
+                                                >
+                                                    Resend / Check Inbox
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setUnverifiedEmail('')}
+                                                    className="py-2 px-3 rounded-xl border border-white/10 text-text-secondary text-xs hover:border-white/20 transition-colors"
+                                                >
+                                                    Dismiss
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : error ? (
+                                        <div className="p-3 rounded-xl bg-danger/10 text-danger text-sm">{error}</div>
+                                    ) : null}
                                     <div className="flex items-start gap-3 py-2">
                                         <input type="checkbox" checked={acceptTerms} onChange={e => setAcceptTerms(e.target.checked)} className="mt-1" id="terms" />
                                         <label htmlFor="terms" className="text-[10px] text-text-secondary">I agree to Terms & Privacy</label>
