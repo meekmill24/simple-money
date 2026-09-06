@@ -37,12 +37,20 @@ function VerifyEmailContent() {
             const { error } = await supabase.auth.resend({
                 type: 'signup',
                 email,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/email-confirmed`,
+                },
             });
             if (error) throw error;
             setResendMessage('Verification email sent! Check your inbox.');
             setResendCooldown(60);
         } catch (err: unknown) {
-            setResendMessage(err instanceof Error ? err.message : 'Failed to resend. Try again later.');
+            const msg = err instanceof Error ? err.message : 'Failed to resend. Try again later.';
+            if (msg.toLowerCase().includes('rate_limit') || msg.toLowerCase().includes('rate limit')) {
+                setResendMessage('Please wait about a minute before requesting another email.');
+            } else {
+                setResendMessage(msg);
+            }
         } finally {
             setResendLoading(false);
         }

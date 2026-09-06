@@ -19,7 +19,13 @@ export default function EmailVerificationBanner() {
         if (resendLoading || cooldown > 0 || !user.email) return;
         setResendLoading(true);
         try {
-            await supabase.auth.resend({ type: 'signup', email: user.email });
+            await supabase.auth.resend({
+                type: 'signup',
+                email: user.email,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/email-confirmed`,
+                },
+            });
             setResendDone(true);
             // 60-second cooldown
             let secs = 60;
